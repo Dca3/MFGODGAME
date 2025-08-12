@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-mafia-primary text-white font-modern;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-mafia-accent hover:bg-red-800 text-white font-bold py-2 px-4 rounded transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-mafia-secondary hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-mafia-secondary rounded-lg shadow-lg p-6 border border-gray-700;
+  }
+  
+  .stat-bar {
+    @apply bg-gray-700 rounded-full h-2 overflow-hidden;
+  }
+  
+  .stat-fill {
+    @apply h-full transition-all duration-300;
+  }
+}
