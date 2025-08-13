@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api',
-  signalRUrl: 'http://localhost:5000/duelHub'
+  apiBaseUrl: 'http://localhost:8080',
+  hubUrl: 'http://localhost:8080/duelHub'
 };

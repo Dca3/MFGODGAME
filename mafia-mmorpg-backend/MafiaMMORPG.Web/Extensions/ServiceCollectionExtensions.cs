@@ -1,20 +1,21 @@
+using MafiaMMORPG.Application.Configuration;
+using MafiaMMORPG.Application.Interfaces;
+using MafiaMMORPG.Application.Repositories;
+using MafiaMMORPG.Infrastructure.Data;
+using MafiaMMORPG.Infrastructure.Jobs;
+using MafiaMMORPG.Infrastructure.Repositories;
+using MafiaMMORPG.Infrastructure.Services;
+using MafiaMMORPG.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
+using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
-using MafiaMMORPG.Infrastructure.Data;
-using MafiaMMORPG.Infrastructure.Services;
-using MafiaMMORPG.Application.Interfaces;
-using MafiaMMORPG.Application.Configuration;
-using MafiaMMORPG.Application.Repositories;
-using MafiaMMORPG.Web.Services;
-using MafiaMMORPG.Infrastructure.Repositories;
-using MafiaMMORPG.Infrastructure.Jobs;
-using Quartz;
 
 namespace MafiaMMORPG.Web.Extensions;
 
@@ -179,6 +180,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICombatService, CombatService>();
         services.AddScoped<ILeaderboardService, LeaderboardService>();
         services.AddScoped<ISeasonService, SeasonService>();
+   
 
         // Quartz Jobs
         services.AddQuartz(q =>
