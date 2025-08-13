@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 using MafiaMMORPG.Infrastructure.Data;
 using MafiaMMORPG.Infrastructure.Services;
 using MafiaMMORPG.Application.Interfaces;
@@ -12,6 +13,8 @@ using MafiaMMORPG.Application.Configuration;
 using MafiaMMORPG.Application.Repositories;
 using MafiaMMORPG.Web.Services;
 using MafiaMMORPG.Infrastructure.Repositories;
+using MafiaMMORPG.Infrastructure.Jobs;
+using Quartz;
 
 namespace MafiaMMORPG.Web.Extensions;
 
@@ -99,11 +102,47 @@ public static class ServiceCollectionExtensions
 
         // Health Checks
         services.AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("Default"))
-            .AddRedis(configuration["Redis:ConnectionString"]);
+            .AddNpgSql(configuration.GetConnectionString("Default"), tags: new[] { "ready" })
+            .AddRedis(configuration["Redis:ConnectionString"], tags: new[] { "ready" });
 
         // Problem Details
         services.AddProblemDetails();
+
+        // Rate Limiting
+        services.AddRateLimiter(options =>
+        {
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 100,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+
+            // Auth endpoints - stricter limits
+            options.AddPolicy("AuthPolicy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+
+            // PvP endpoints - medium limits
+            options.AddPolicy("PvPPolicy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User.Identity?.Name ?? "anonymous",
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 50,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+        });
 
         // Swagger
         services.AddEndpointsApiExplorer();
@@ -138,6 +177,36 @@ public static class ServiceCollectionExtensions
         // Application Services
         services.AddScoped<IMatchmakingService, MatchmakingService>();
         services.AddScoped<ICombatService, CombatService>();
+        services.AddScoped<ILeaderboardService, LeaderboardService>();
+        services.AddScoped<ISeasonService, SeasonService>();
+
+        // Quartz Jobs
+        services.AddQuartz(q =>
+        {
+            q.UseMicrosoftDependencyInjectionJobFactory();
+
+            // Season Close Job
+            var seasonCloseJobKey = new JobKey("SeasonCloseJob");
+            q.AddJob<SeasonCloseJob>(opts => opts.WithIdentity(seasonCloseJobKey));
+
+            q.AddTrigger(opts => opts
+                .ForJob(seasonCloseJobKey)
+                .WithIdentity("SeasonCloseTrigger")
+                .WithCronSchedule(configuration["Quartz:SeasonsCloseCron"] ?? "0 59 23 L * ?")); // Default: end of month 23:59
+
+            // Match Cleanup Job
+            var matchCleanupJobKey = new JobKey("MatchCleanupJob");
+            q.AddJob<MatchCleanupJob>(opts => opts.WithIdentity(matchCleanupJobKey));
+
+            q.AddTrigger(opts => opts
+                .ForJob(matchCleanupJobKey)
+                .WithIdentity("MatchCleanupTrigger")
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInMinutes(1)
+                    .RepeatForever()));
+        });
+
+        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         return services;
     }

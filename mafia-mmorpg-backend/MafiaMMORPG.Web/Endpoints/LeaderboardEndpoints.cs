@@ -1,4 +1,5 @@
 using MafiaMMORPG.Infrastructure.Data;
+using MafiaMMORPG.Application.Interfaces;
 
 namespace MafiaMMORPG.Web.Endpoints;
 
@@ -6,18 +7,32 @@ public static class LeaderboardEndpoints
 {
     public static IEndpointRouteBuilder MapLeaderboardEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/leaderboard/global", async (ApplicationDbContext db) =>
+        app.MapGet("/leaderboard/global", async (int? top, ILeaderboardService leaderboardService) =>
         {
-            // TODO: Implement get global leaderboard logic
-            return Results.Ok(new { Message = "Get global leaderboard endpoint" });
+            try
+            {
+                var leaderboard = await leaderboardService.GetGlobalTopAsync(top ?? 1000);
+                return Results.Ok(leaderboard);
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
         })
         .WithName("GetGlobalLeaderboard")
         .WithOpenApi();
 
-        app.MapGet("/leaderboard/region/{code}", async (string code, ApplicationDbContext db) =>
+        app.MapGet("/leaderboard/region/{code}", async (string code, int? top, ILeaderboardService leaderboardService) =>
         {
-            // TODO: Implement get regional leaderboard logic
-            return Results.Ok(new { Message = "Get regional leaderboard endpoint" });
+            try
+            {
+                var leaderboard = await leaderboardService.GetRegionalTopAsync(code, top ?? 1000);
+                return Results.Ok(leaderboard);
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
         })
         .WithName("GetRegionalLeaderboard")
         .WithOpenApi();

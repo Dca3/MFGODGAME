@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MafiaMMORPG.Application\MafiaMMORPG.Application.csproj" />
     <ProjectReference Include="..\MafiaMMORPG.Infrastructure\MafiaMMORPG.Infrastructure.csproj" />
+    <ProjectReference Include="..\MafiaMMORPG.Web\MafiaMMORPG.Web.csproj" />
   </ItemGroup>
 
 </Project>

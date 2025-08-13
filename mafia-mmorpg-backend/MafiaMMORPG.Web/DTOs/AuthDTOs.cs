@@ -33,5 +33,6 @@ public record AllocateStatsRequest(
 public record UserAction(
     string Type,
     string? Target,
-    Dictionary<string, object>? Data
+    Dictionary<string, object>? Data,
+    int TurnId = 0
 );

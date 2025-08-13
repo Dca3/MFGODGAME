@@ -14,7 +14,8 @@ public static class PvpEndpoints
         })
         .WithName("JoinQueue")
         .WithOpenApi()
-        .RequireAuthorization();
+        .RequireAuthorization()
+        .RequireRateLimiting("PvPPolicy");
 
         app.MapDelete("/pvp/queue", async (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
@@ -23,7 +24,8 @@ public static class PvpEndpoints
         })
         .WithName("LeaveQueue")
         .WithOpenApi()
-        .RequireAuthorization();
+        .RequireAuthorization()
+        .RequireRateLimiting("PvPPolicy");
 
         app.MapGet("/pvp/status", async (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
@@ -32,7 +34,8 @@ public static class PvpEndpoints
         })
         .WithName("GetQueueStatus")
         .WithOpenApi()
-        .RequireAuthorization();
+        .RequireAuthorization()
+        .RequireRateLimiting("PvPPolicy");
 
         return app;
     }

@@ -103,7 +103,8 @@ public static class AuthEndpoints
             }
         })
         .WithName("Register")
-        .WithOpenApi();
+        .WithOpenApi()
+        .RequireRateLimiting("AuthPolicy");
 
         app.MapPost("/auth/login", async (LoginRequest request, JwtService jwtService, ApplicationDbContext db, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, HttpContext httpContext) =>
         {
@@ -162,7 +163,8 @@ public static class AuthEndpoints
             }
         })
         .WithName("Login")
-        .WithOpenApi();
+        .WithOpenApi()
+        .RequireRateLimiting("AuthPolicy");
 
         app.MapPost("/auth/refresh", async (RefreshRequest request, JwtService jwtService, ApplicationDbContext db, UserManager<IdentityUser> userManager, HttpContext httpContext) =>
         {
@@ -217,7 +219,8 @@ public static class AuthEndpoints
             }
         })
         .WithName("Refresh")
-        .WithOpenApi();
+        .WithOpenApi()
+        .RequireRateLimiting("AuthPolicy");
 
         return app;
     }

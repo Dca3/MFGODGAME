@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using MafiaMMORPG.Infrastructure.Data;
 using MafiaMMORPG.Web.DTOs;
+using MafiaMMORPG.Web;
 
 namespace MafiaMMORPG.Tests;
 

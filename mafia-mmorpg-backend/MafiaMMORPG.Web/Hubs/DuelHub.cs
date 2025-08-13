@@ -35,10 +35,21 @@ public class DuelHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var userId = GetUserIdFromContext();
-        if (!string.IsNullOrEmpty(userId))
+        var playerId = GetPlayerIdFromContext();
+        if (playerId != Guid.Empty)
         {
-            _logger.LogInformation("User {UserId} disconnected from DuelHub", userId);
+            _logger.LogInformation("Player {PlayerId} disconnected from DuelHub", playerId);
+            
+            // Auto-dequeue player if they were in queue
+            try
+            {
+                await _matchmakingService.DequeueAsync(playerId);
+                _logger.LogInformation("Auto-dequeued player {PlayerId} due to disconnect", playerId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to auto-dequeue player {PlayerId}", playerId);
+            }
         }
         
         await base.OnDisconnectedAsync(exception);
@@ -149,6 +160,24 @@ public class DuelHub : Hub
             await Clients.Caller.SendAsync("Error", "Unauthorized");
             return;
         }
+
+        // Validation
+        if (action == null || string.IsNullOrEmpty(action.Type) || action.TurnId <= 0)
+        {
+            await Clients.Caller.SendAsync("Error", "Invalid action data");
+            return;
+        }
+
+        // Message size validation (64KB limit)
+        var actionJson = System.Text.Json.JsonSerializer.Serialize(action);
+        if (actionJson.Length > 64 * 1024)
+        {
+            await Clients.Caller.SendAsync("Error", "Action data too large");
+            return;
+        }
+
+        // TODO: Implement idempotency check and throttle
+        // TODO: Implement actual action processing
 
         try
         {

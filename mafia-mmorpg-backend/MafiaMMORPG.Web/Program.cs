@@ -22,11 +22,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler(); // ProblemDetails
 app.UseCors("Frontend");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Health check
-app.MapHealthChecks("/health");
+// Health checks
+app.MapHealthChecks("/health/live", new() { Predicate = _ => true });
+app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Contains("ready") });
 
 // Map all endpoints
 app.MapAuthEndpoints();
@@ -35,6 +37,7 @@ app.MapInventoryEndpoints();
 app.MapQuestEndpoints();
 app.MapPvpEndpoints();
 app.MapLeaderboardEndpoints();
+app.MapAdminEndpoints();
 
 // SignalR Hub
 app.MapHub<DuelHub>("/duelHub");

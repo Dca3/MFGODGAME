@@ -44,6 +44,11 @@ public class EfRepository<T> : IRepository<T> where T : class
         return await query.ToListAsync(ct);
     }
 
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default)
+    {
+        return await _dbSet.AsNoTracking().ToListAsync(ct);
+    }
+
     public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default)
     {
         var query = _dbSet.AsQueryable();
@@ -72,6 +77,12 @@ public class EfRepository<T> : IRepository<T> where T : class
     public Task UpdateAsync(T entity, CancellationToken ct = default)
     {
         _dbSet.Update(entity);
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateRangeAsync(IEnumerable<T> entities, CancellationToken ct = default)
+    {
+        _dbSet.UpdateRange(entities);
         return Task.CompletedTask;
     }
 
