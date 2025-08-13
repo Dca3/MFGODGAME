@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using MafiaMMORPG.Domain.ValueObjects;
 
 namespace MafiaMMORPG.Domain.Entities;
 
@@ -11,21 +12,15 @@ public class PlayerQuest
     
     public PlayerQuestState State { get; set; } = PlayerQuestState.Available;
     
-    public string ProgressJson { get; set; } = "{}";
-    
     public DateTime? StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
-    
+
     // Navigation properties
     public Player Player { get; set; } = null!;
     public Quest Quest { get; set; } = null!;
     
-    // Helper properties
-    public Dictionary<string, object> Progress
-    {
-        get => JsonSerializer.Deserialize<Dictionary<string, object>>(ProgressJson) ?? new Dictionary<string, object>();
-        set => ProgressJson = JsonSerializer.Serialize(value);
-    }
+    // ÖNEMLİ: Tipli koleksiyon yap
+    public List<QuestProgress> Progress { get; set; } = new();
 }
 
 public enum PlayerQuestState

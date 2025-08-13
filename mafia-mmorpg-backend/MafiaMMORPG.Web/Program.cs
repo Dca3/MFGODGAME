@@ -5,6 +5,12 @@ using MafiaMMORPG.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuration loading
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
 // Docker URL binding
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
@@ -41,14 +47,6 @@ app.MapAdminEndpoints();
 
 // SignalR Hub
 app.MapHub<DuelHub>("/duelHub");
-
-// Seed data in development
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var seedService = scope.ServiceProvider.GetRequiredService<SeedService>();
-    await seedService.SeedAsync();
-}
 
 app.Run();
 

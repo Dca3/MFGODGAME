@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MafiaMMORPG.Domain.Entities;
+using MafiaMMORPG.Domain.ValueObjects;
 
 namespace MafiaMMORPG.Infrastructure.Data;
 
@@ -18,10 +19,11 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Quest> Quests { get; set; }
     public DbSet<PlayerQuest> PlayerQuests { get; set; }
     public DbSet<Duel> Duels { get; set; }
-            public DbSet<Rating> Ratings { get; set; }
-        public DbSet<Season> Seasons { get; set; }
-        public DbSet<Leaderboard> Leaderboards { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<DuelAction> DuelActions { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
+    public DbSet<Season> Seasons { get; set; }
+    public DbSet<Leaderboard> Leaderboards { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -72,6 +74,7 @@ public class ApplicationDbContext : IdentityDbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.RollDataJson).HasColumnType("jsonb");
+            entity.Ignore(e => e.RollData); // Ignore the helper property
             entity.HasOne(e => e.Player)
                 .WithMany(e => e.Inventory)
                 .HasForeignKey(e => e.PlayerId)
@@ -94,13 +97,35 @@ public class ApplicationDbContext : IdentityDbContext
             entity.Property(e => e.RequirementsJson).HasColumnType("jsonb");
             entity.Property(e => e.Location).HasMaxLength(100);
             entity.Property(e => e.NpcName).HasMaxLength(50);
+            
+            // Ignore helper properties
+            entity.Ignore(e => e.Story);
+            entity.Ignore(e => e.Rewards);
+            entity.Ignore(e => e.Requirements);
         });
 
         // PlayerQuest configurations
         builder.Entity<PlayerQuest>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.ProgressJson).HasColumnType("jsonb");
+            
+            // Owned koleksiyon olarak tabloya map
+            entity.OwnsMany(pq => pq.Progress, b =>
+            {
+                b.ToTable("PlayerQuestProgress");
+                b.WithOwner().HasForeignKey("PlayerQuestId");       // FK (shadow)
+                b.Property<int>("Id");                              // shadow PK
+                b.HasKey("Id");
+
+                b.Property(p => p.StepIndex).IsRequired();
+                b.Property(p => p.StepCode).HasMaxLength(64);
+                b.Property(p => p.Completed).IsRequired();
+                b.Property(p => p.UpdatedAt).HasDefaultValueSql("now()");
+                b.Property(p => p.Notes).HasMaxLength(512);
+
+                b.HasIndex("PlayerQuestId", nameof(QuestProgress.StepIndex)).IsUnique(false);
+            });
+            
             entity.HasOne(e => e.Player)
                 .WithMany(e => e.Quests)
                 .HasForeignKey(e => e.PlayerId)
@@ -132,6 +157,15 @@ public class ApplicationDbContext : IdentityDbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        // DuelAction configurations
+        builder.Entity<DuelAction>(entity =>
+        {
+            entity.HasKey(e => e.Type); // Type as key for shared entity
+            entity.Property(e => e.Type).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Target).HasMaxLength(100);
+            entity.Property(e => e.Data).HasColumnType("jsonb");
+        });
+
                             // Rating configurations
                     builder.Entity<Rating>(entity =>
                     {
@@ -158,6 +192,9 @@ public class ApplicationDbContext : IdentityDbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
             entity.Property(e => e.RewardsJson).HasColumnType("jsonb");
+            
+            // Ignore helper property
+            entity.Ignore(e => e.Rewards);
         });
 
         // Leaderboard configurations

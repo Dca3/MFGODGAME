@@ -101,6 +101,15 @@ public static class ServiceCollectionExtensions
         services.AddSignalR(o => o.EnableDetailedErrors = true)
             .AddStackExchangeRedis(configuration["Redis:ConnectionString"] ?? "redis:6379");
 
+        // Redis Connection
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var connectionString = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+            var options = ConfigurationOptions.Parse(connectionString);
+            options.AbortOnConnectFail = false;    // dev için önerilir
+            return ConnectionMultiplexer.Connect(options);
+        });
+
         // Health Checks
         services.AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionString("Default") ?? "Host=postgres;Database=mmrpg;Username=postgres;Password=postgres", tags: new[] { "ready" })
@@ -169,6 +178,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IStatFormulaService, StatFormulaService>();
         services.AddScoped<JwtService>();
         services.AddScoped<SeedService>();
+
+        // Hosted Services
+        services.AddHostedService<DbReadyHostedService>();
 
         // Repository Pattern
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
