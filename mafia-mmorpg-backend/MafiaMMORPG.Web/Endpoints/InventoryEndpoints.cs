@@ -9,7 +9,7 @@ public static class InventoryEndpoints
 {
     public static IEndpointRouteBuilder MapInventoryEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/me/inventory", async (ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapGet("/me/inventory", (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement get inventory logic
             return Results.Ok(new { Message = "Get inventory endpoint" });
@@ -59,7 +59,7 @@ public static class InventoryEndpoints
         .WithOpenApi()
         .RequireAuthorization();
 
-        app.MapPost("/craft/upgrade", async (Guid itemId, ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapPost("/craft/upgrade", (Guid itemId, ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement craft upgrade logic
             return Results.Ok(new { Message = "Craft upgrade endpoint" });

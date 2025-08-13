@@ -51,3 +51,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+// Make Program class public for testing
+public partial class Program { }

@@ -10,7 +10,7 @@ namespace MafiaMMORPG.Infrastructure.Services;
 
 public class MatchmakingService : IMatchmakingService
 {
-    private readonly IConnectionMultiplexer _redis;
+    private readonly IDatabase _db;
     private readonly IRepository<Rating> _ratingRepo;
     private readonly ILogger<MatchmakingService> _logger;
     private readonly LoadedLuaScript _matchmakingScript;
@@ -27,7 +27,11 @@ public class MatchmakingService : IMatchmakingService
         IRepository<Rating> ratingRepo,
         ILogger<MatchmakingService> logger)
     {
-        _redis = redis;
+        ArgumentNullException.ThrowIfNull(redis);
+        ArgumentNullException.ThrowIfNull(ratingRepo);
+        ArgumentNullException.ThrowIfNull(logger);
+        
+        _db = redis.GetDatabase();
         _ratingRepo = ratingRepo;
         _logger = logger;
         
@@ -38,7 +42,6 @@ public class MatchmakingService : IMatchmakingService
 
     public async Task<MatchInfo?> EnqueueAsync(Guid playerId)
     {
-        var db = _redis.GetDatabase();
         var now = DateTime.UtcNow;
         var nowTicks = now.Ticks;
         
@@ -56,17 +59,17 @@ public class MatchmakingService : IMatchmakingService
             var delta = CalculateDelta(waitingSeconds);
             
             // Kuyruğa ekle
-            await db.SortedSetAddAsync("mmrpg:pvp:queue", playerId.ToString(), mmr);
+            await _db.SortedSetAddAsync("mmrpg:pvp:queue", playerId.ToString(), mmr);
             
             // Bekleme meta verilerini kaydet
-            await db.HashSetAsync($"mmrpg:pvp:wait:{playerId}", new HashEntry[]
+            await _db.HashSetAsync($"mmrpg:pvp:wait:{playerId}", new HashEntry[]
             {
                 new("mmr", mmr),
                 new("enqueuedAt", nowTicks)
             });
             
             // Oyuncu durumunu güncelle
-            await db.HashSetAsync($"mmrpg:pvp:state:{playerId}", new HashEntry[]
+            await _db.HashSetAsync($"mmrpg:pvp:state:{playerId}", new HashEntry[]
             {
                 new("state", "queued"),
                 new("matchId", "")
@@ -76,7 +79,7 @@ public class MatchmakingService : IMatchmakingService
             
             // Atomik eşleştirme dene
             var matchId = Guid.NewGuid();
-            var result = await _matchmakingScript.EvaluateAsync(db, new
+            var result = await _matchmakingScript.EvaluateAsync(_db, new
             {
                 playerId = playerId.ToString(),
                 mmr = mmr,
@@ -92,9 +95,30 @@ public class MatchmakingService : IMatchmakingService
             }
             
             // Eşleştirme bulundu
-            var matchData = (RedisValue[])result;
-            var p1 = Guid.Parse(matchData[1]);
-            var p2 = Guid.Parse(matchData[2]);
+            if (result == null)
+            {
+                _logger.LogWarning("Null result for player {PlayerId}", playerId);
+                return null;
+            }
+            
+            var matchData = (RedisValue[])result!;
+            if (matchData == null || matchData.Length < 3)
+            {
+                _logger.LogWarning("Invalid match data for player {PlayerId}", playerId);
+                return null;
+            }
+            
+            var p1Str = matchData[1].ToString() ?? string.Empty;
+            var p2Str = matchData[2].ToString() ?? string.Empty;
+            
+            if (string.IsNullOrWhiteSpace(p1Str) || string.IsNullOrWhiteSpace(p2Str))
+            {
+                _logger.LogWarning("Invalid match data for player {PlayerId}", playerId);
+                return null;
+            }
+            
+            var p1 = Guid.Parse(p1Str);
+            var p2 = Guid.Parse(p2Str);
             
             var matchInfo = new MatchInfo(
                 matchId,
@@ -118,16 +142,14 @@ public class MatchmakingService : IMatchmakingService
 
     public async Task<bool> DequeueAsync(Guid playerId)
     {
-        var db = _redis.GetDatabase();
-        
         try
         {
             // Kuyruktan çıkar
-            var removed = await db.SortedSetRemoveAsync("mmrpg:pvp:queue", playerId.ToString());
+            var removed = await _db.SortedSetRemoveAsync("mmrpg:pvp:queue", playerId.ToString());
             
             // Durumu temizle
-            await db.KeyDeleteAsync($"mmrpg:pvp:state:{playerId}");
-            await db.KeyDeleteAsync($"mmrpg:pvp:wait:{playerId}");
+            await _db.KeyDeleteAsync($"mmrpg:pvp:state:{playerId}");
+            await _db.KeyDeleteAsync($"mmrpg:pvp:wait:{playerId}");
             
             if (removed)
             {
@@ -145,12 +167,10 @@ public class MatchmakingService : IMatchmakingService
 
     public async Task<bool> AcceptAsync(Guid playerId, Guid matchId)
     {
-        var db = _redis.GetDatabase();
-        
         try
         {
             // Kabul set'ine ekle
-            var added = await db.SetAddAsync($"mmrpg:pvp:accept:{matchId}", playerId.ToString());
+            var added = await _db.SetAddAsync($"mmrpg:pvp:accept:{matchId}", playerId.ToString());
             
             if (!added)
             {
@@ -159,12 +179,12 @@ public class MatchmakingService : IMatchmakingService
             }
             
             // Diğer oyuncunun kabul edip etmediğini kontrol et
-            var acceptCount = await db.SetLengthAsync($"mmrpg:pvp:accept:{matchId}");
+            var acceptCount = await _db.SetLengthAsync($"mmrpg:pvp:accept:{matchId}");
             
             if (acceptCount == 2)
             {
                 // Her iki taraf da kabul etti
-                await db.HashSetAsync($"mmrpg:pvp:match:{matchId}", "state", "accepted");
+                await _db.HashSetAsync($"mmrpg:pvp:match:{matchId}", "state", "accepted");
                 
                 _logger.LogInformation("Match {MatchId} accepted by both players", matchId);
                 return true;
@@ -182,13 +202,11 @@ public class MatchmakingService : IMatchmakingService
 
     public async Task<PlayerQueueStatus?> GetStatusAsync(Guid playerId)
     {
-        var db = _redis.GetDatabase();
-        
         try
         {
-            var state = await db.HashGetAsync($"mmrpg:pvp:state:{playerId}", "state");
-            var matchId = await db.HashGetAsync($"mmrpg:pvp:state:{playerId}", "matchId");
-            var waitData = await db.HashGetAllAsync($"mmrpg:pvp:wait:{playerId}");
+            var state = await _db.HashGetAsync($"mmrpg:pvp:state:{playerId}", "state");
+            var matchId = await _db.HashGetAsync($"mmrpg:pvp:state:{playerId}", "matchId");
+            var waitData = await _db.HashGetAllAsync($"mmrpg:pvp:wait:{playerId}");
             
             if (state.IsNull)
                 return null;
@@ -196,16 +214,30 @@ public class MatchmakingService : IMatchmakingService
             var waitingSeconds = 0;
             if (state == "queued" && waitData.Length > 0)
             {
-                var enqueuedAt = long.Parse(waitData.FirstOrDefault(x => x.Name == "enqueuedAt").Value);
-                var now = DateTime.UtcNow.Ticks;
-                waitingSeconds = (int)((now - enqueuedAt) / TimeSpan.TicksPerSecond);
+                var enqueuedAtEntry = waitData.FirstOrDefault(x => x.Name == "enqueuedAt");
+                if (!enqueuedAtEntry.Value.IsNull)
+                {
+                    var enqueuedAtStr = enqueuedAtEntry.Value.ToString();
+                    if (!string.IsNullOrWhiteSpace(enqueuedAtStr) && long.TryParse(enqueuedAtStr, out var enqueuedAt))
+                    {
+                        var now = DateTime.UtcNow.Ticks;
+                        waitingSeconds = (int)((now - enqueuedAt) / TimeSpan.TicksPerSecond);
+                    }
+                }
             }
             
             var currentDelta = CalculateDelta(waitingSeconds);
             
+            var matchIdStr = matchId.ToString();
+            Guid? matchIdGuid = null;
+            if (!string.IsNullOrWhiteSpace(matchIdStr))
+            {
+                matchIdGuid = Guid.Parse(matchIdStr);
+            }
+            
             return new PlayerQueueStatus(
                 state.ToString(),
-                string.IsNullOrEmpty(matchId) ? null : Guid.Parse(matchId),
+                matchIdGuid,
                 waitingSeconds,
                 currentDelta
             );
@@ -226,12 +258,10 @@ public class MatchmakingService : IMatchmakingService
     // Timeout temizleme (arka plan job için)
     public async Task CleanupExpiredMatches()
     {
-        var db = _redis.GetDatabase();
-        
         try
         {
             // Süresi dolmuş accept set'lerini bul
-            var expiredAccepts = await db.ExecuteAsync("SCAN", "0", "MATCH", "mmrpg:pvp:accept:*", "COUNT", "100");
+            var expiredAccepts = await _db.ExecuteAsync("SCAN", "0", "MATCH", "mmrpg:pvp:accept:*", "COUNT", "100");
             
             // Her expired accept için:
             // - Match'i cancelled yap

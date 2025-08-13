@@ -7,7 +7,7 @@ public static class PvpEndpoints
 {
     public static IEndpointRouteBuilder MapPvpEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/pvp/queue", async (ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapPost("/pvp/queue", (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement join queue logic
             return Results.Ok(new { Message = "Join queue endpoint" });
@@ -17,7 +17,7 @@ public static class PvpEndpoints
         .RequireAuthorization()
         .RequireRateLimiting("PvPPolicy");
 
-        app.MapDelete("/pvp/queue", async (ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapDelete("/pvp/queue", (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement leave queue logic
             return Results.Ok(new { Message = "Leave queue endpoint" });
@@ -27,7 +27,7 @@ public static class PvpEndpoints
         .RequireAuthorization()
         .RequireRateLimiting("PvPPolicy");
 
-        app.MapGet("/pvp/status", async (ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapGet("/pvp/status", (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement get queue status logic
             return Results.Ok(new { Message = "Get queue status endpoint" });

@@ -98,12 +98,12 @@ public static class ServiceCollectionExtensions
 
         // SignalR + Redis
         services.AddSignalR(o => o.EnableDetailedErrors = true)
-            .AddStackExchangeRedis(configuration["Redis:ConnectionString"]);
+            .AddStackExchangeRedis(configuration["Redis:ConnectionString"] ?? "redis:6379");
 
         // Health Checks
         services.AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("Default"), tags: new[] { "ready" })
-            .AddRedis(configuration["Redis:ConnectionString"], tags: new[] { "ready" });
+            .AddNpgSql(configuration.GetConnectionString("Default") ?? "Host=postgres;Database=mmrpg;Username=postgres;Password=postgres", tags: new[] { "ready" })
+            .AddRedis(configuration["Redis:ConnectionString"] ?? "redis:6379", tags: new[] { "ready" });
 
         // Problem Details
         services.AddProblemDetails();
@@ -183,22 +183,23 @@ public static class ServiceCollectionExtensions
         // Quartz Jobs
         services.AddQuartz(q =>
         {
-            q.UseMicrosoftDependencyInjectionJobFactory();
-
             // Season Close Job
             var seasonCloseJobKey = new JobKey("SeasonCloseJob");
             q.AddJob<SeasonCloseJob>(opts => opts.WithIdentity(seasonCloseJobKey));
 
-            q.AddTrigger(opts => opts
+            q.AddTrigger(t => t
                 .ForJob(seasonCloseJobKey)
                 .WithIdentity("SeasonCloseTrigger")
-                .WithCronSchedule(configuration["Quartz:SeasonsCloseCron"] ?? "0 59 23 L * ?")); // Default: end of month 23:59
+                .WithSchedule(CronScheduleBuilder
+                    .CronSchedule(configuration["Quartz:SeasonsCloseCron"] ?? "0 59 23 L * ?")
+                    .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Europe/Istanbul"))
+                    .WithMisfireHandlingInstructionFireAndProceed()));
 
             // Match Cleanup Job
             var matchCleanupJobKey = new JobKey("MatchCleanupJob");
             q.AddJob<MatchCleanupJob>(opts => opts.WithIdentity(matchCleanupJobKey));
 
-            q.AddTrigger(opts => opts
+            q.AddTrigger(t => t
                 .ForJob(matchCleanupJobKey)
                 .WithIdentity("MatchCleanupTrigger")
                 .WithSimpleSchedule(x => x

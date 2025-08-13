@@ -11,6 +11,10 @@ public class DuelHub : Hub
     private readonly IMatchmakingService _matchmakingService;
     private readonly ICombatService _combatService;
     private readonly ILogger<DuelHub> _logger;
+    
+    // Throttle ve idempotency için memory cache
+    private static readonly Dictionary<Guid, DateTime> _lastActionTime = new();
+    private static readonly Dictionary<Guid, int> _lastProcessedTurnId = new();
 
     public DuelHub(
         IMatchmakingService matchmakingService,
@@ -176,11 +180,46 @@ public class DuelHub : Hub
             return;
         }
 
-        // TODO: Implement idempotency check and throttle
-        // TODO: Implement actual action processing
+        // Idempotency check
+        lock (_lastProcessedTurnId)
+        {
+            if (_lastProcessedTurnId.TryGetValue(playerId, out var lastTurnId) && lastTurnId >= action.TurnId)
+            {
+                _logger.LogInformation("Duplicate action for player {PlayerId}, turn {TurnId}", playerId, action.TurnId);
+                return;
+            }
+        }
+
+        // Throttle check (250ms minimum)
+        lock (_lastActionTime)
+        {
+            if (_lastActionTime.TryGetValue(playerId, out var lastTime))
+            {
+                var timeSinceLastAction = DateTime.UtcNow - lastTime;
+                if (timeSinceLastAction.TotalMilliseconds < 250)
+                {
+                    _logger.LogWarning("Action throttled for player {PlayerId}, too frequent", playerId);
+                    return;
+                }
+            }
+            _lastActionTime[playerId] = DateTime.UtcNow;
+        }
 
         try
         {
+            // Process action
+            _logger.LogInformation("Processing action for player {PlayerId}, turn {TurnId}, type {Type}", 
+                playerId, action.TurnId, action.Type);
+
+            // TODO: Implement actual action processing
+            // var result = await _combatService.ProcessAction(playerId, action);
+
+            // Update last processed turn ID
+            lock (_lastProcessedTurnId)
+            {
+                _lastProcessedTurnId[playerId] = action.TurnId;
+            }
+
             await Clients.Caller.SendAsync("ActionReceived", "Action submitted successfully");
         }
         catch (Exception ex)

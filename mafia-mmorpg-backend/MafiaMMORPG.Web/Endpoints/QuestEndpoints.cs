@@ -7,7 +7,7 @@ public static class QuestEndpoints
 {
     public static IEndpointRouteBuilder MapQuestEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/quests/available", async (ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapGet("/quests/available", (ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement get available quests logic
             return Results.Ok(new { Message = "Get available quests endpoint" });
@@ -16,7 +16,7 @@ public static class QuestEndpoints
         .WithOpenApi()
         .RequireAuthorization();
 
-        app.MapPost("/quests/{id}/start", async (Guid id, ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapPost("/quests/{id}/start", (Guid id, ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement start quest logic
             return Results.Ok(new { Message = "Start quest endpoint" });
@@ -25,7 +25,7 @@ public static class QuestEndpoints
         .WithOpenApi()
         .RequireAuthorization();
 
-        app.MapPost("/quests/{id}/complete", async (Guid id, ClaimsPrincipal user, ApplicationDbContext db) =>
+        app.MapPost("/quests/{id}/complete", (Guid id, ClaimsPrincipal user, ApplicationDbContext db) =>
         {
             // TODO: Implement complete quest logic
             return Results.Ok(new { Message = "Complete quest endpoint" });
