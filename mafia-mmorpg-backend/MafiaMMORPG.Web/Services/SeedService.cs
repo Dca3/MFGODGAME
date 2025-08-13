@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MafiaMMORPG.Infrastructure.Data;
 using MafiaMMORPG.Application.Repositories;
 using MafiaMMORPG.Domain.Entities;
+using MafiaMMORPG.Domain.Enums;
 
 namespace MafiaMMORPG.Web.Services;
 
@@ -47,6 +48,10 @@ public class SeedService
 
         // Create demo player
         await CreateDemoPlayerAsync();
+        
+        // Create quests and items
+        await CreateQuestsAsync();
+        await CreateItemDefinitionsAsync();
     }
 
     private async Task CreateRolesAsync()
@@ -150,5 +155,174 @@ public class SeedService
                 await _ratingRepo.AddAsync(rating, ct);
             });
         }
+    }
+
+    private async Task CreateQuestsAsync()
+    {
+        if (await _db.Quests.AnyAsync())
+            return;
+
+        var quests = new List<Quest>
+        {
+            new Quest
+            {
+                Id = Guid.NewGuid(),
+                Title = "Mahalleye Giriş",
+                Description = "Yeni bir mahalleye giriş yap ve yerel mafya ile tanış.",
+                Difficulty = QuestDifficulty.Easy,
+                RequiredLevel = 1,
+                Location = "Küçük Mahalle",
+                NpcName = "Mahalle Ağası"
+            },
+            new Quest
+            {
+                Id = Guid.NewGuid(),
+                Title = "Rüşvet Zinciri",
+                Description = "Polis memurlarına rüşvet ver ve onları yanına çek.",
+                Difficulty = QuestDifficulty.Normal,
+                RequiredLevel = 3,
+                Location = "Polis Karakolu",
+                NpcName = "Komiser"
+            },
+            new Quest
+            {
+                Id = Guid.NewGuid(),
+                Title = "Kasa Soygunu",
+                Description = "Büyük bir bankanın kasasını soy ve değerli eşyaları çıkar.",
+                Difficulty = QuestDifficulty.Hard,
+                RequiredLevel = 5,
+                Location = "Merkez Bankası",
+                NpcName = "Güvenlik Şefi"
+            },
+            new Quest
+            {
+                Id = Guid.NewGuid(),
+                Title = "Büyük Vurgun",
+                Description = "Şehrin en büyük kumarhanesini soy ve tüm parayı al.",
+                Difficulty = QuestDifficulty.Mythic,
+                RequiredLevel = 8,
+                Location = "Altın Kumarhane",
+                NpcName = "Kumarhane Sahibi"
+            }
+        };
+
+        await _db.Quests.AddRangeAsync(quests);
+        await _db.SaveChangesAsync();
+    }
+
+    private async Task CreateItemDefinitionsAsync()
+    {
+        if (await _db.ItemDefinitions.AnyAsync())
+            return;
+
+        var items = new List<ItemDefinition>
+        {
+            // Common items
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Paslı Tabanca",
+                Slot = ItemSlot.Weapon,
+                Rarity = ItemRarity.Common,
+                ItemLevel = 5,
+                RequiredLevel = 1,
+                BaseG = 3
+            },
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sıradan Gözlük",
+                Slot = ItemSlot.Glasses,
+                Rarity = ItemRarity.Common,
+                ItemLevel = 8,
+                RequiredLevel = 3,
+                BaseZ = 2
+            },
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Eski Smokin",
+                Slot = ItemSlot.Suit,
+                Rarity = ItemRarity.Common,
+                ItemLevel = 10,
+                RequiredLevel = 5,
+                BaseK = 1
+            },
+            
+            // Uncommon items
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Denge Tabancası",
+                Slot = ItemSlot.Weapon,
+                Rarity = ItemRarity.Uncommon,
+                ItemLevel = 20,
+                RequiredLevel = 12,
+                BaseG = 8,
+                BaseZ = 3
+            },
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Keskin Bakış Gözlüğü",
+                Slot = ItemSlot.Glasses,
+                Rarity = ItemRarity.Uncommon,
+                ItemLevel = 22,
+                RequiredLevel = 15,
+                BaseZ = 8
+            },
+            
+            // Rare items
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "İmza Silahı",
+                Slot = ItemSlot.Weapon,
+                Rarity = ItemRarity.Rare,
+                ItemLevel = 40,
+                RequiredLevel = 28,
+                BaseK = 8,
+                BaseG = 5
+            },
+            
+            // Epic items
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Gece Operatörü Smokin",
+                Slot = ItemSlot.Suit,
+                Rarity = ItemRarity.Epic,
+                ItemLevel = 60,
+                RequiredLevel = 45,
+                BaseZ = 12,
+                BaseK = 15
+            },
+            
+            // Legendary items
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Gece Gölgesi Smokin",
+                Slot = ItemSlot.Suit,
+                Rarity = ItemRarity.Legendary,
+                ItemLevel = 80,
+                RequiredLevel = 60,
+                BaseK = 25,
+                BaseZ = 20
+            },
+            new ItemDefinition
+            {
+                Id = Guid.NewGuid(),
+                Name = "Patronun Bakışı Gözlük",
+                Slot = ItemSlot.Glasses,
+                Rarity = ItemRarity.Legendary,
+                ItemLevel = 20,
+                RequiredLevel = 20,
+                BaseZ = 30
+            }
+        };
+
+        await _db.ItemDefinitions.AddRangeAsync(items);
+        await _db.SaveChangesAsync();
     }
 }

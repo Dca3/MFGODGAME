@@ -12,7 +12,7 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 // Docker URL binding
-builder.WebHost.UseUrls("http://0.0.0.0:8080");
+//builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 // Add all services
 builder.Services.AddAppServices(builder.Configuration);

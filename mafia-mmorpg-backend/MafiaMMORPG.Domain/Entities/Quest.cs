@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using MafiaMMORPG.Domain.Enums;
 
 namespace MafiaMMORPG.Domain.Entities;
 
@@ -16,6 +17,7 @@ public class Quest
     public string Description { get; set; } = string.Empty;
     
     public QuestDifficulty Difficulty { get; set; } = QuestDifficulty.Easy;
+    public int RequiredLevel { get; set; } = 1;
     
     public string StoryJson { get; set; } = "{}";
     
@@ -52,13 +54,7 @@ public class Quest
     }
 }
 
-public enum QuestDifficulty
-{
-    Easy = 0,
-    Medium = 1,
-    Hard = 2,
-    Legendary = 3
-}
+
 
 public class QuestReward
 {

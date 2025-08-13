@@ -7,7 +7,7 @@ public class PlayerInventory
 {
     public Guid Id { get; set; }
     public Guid PlayerId { get; set; }
-    public Guid ItemId { get; set; }
+    public Guid ItemDefinitionId { get; set; }
     
     public bool IsEquipped { get; set; } = false;
     
@@ -15,7 +15,7 @@ public class PlayerInventory
     
     // Navigation properties
     public Player Player { get; set; } = null!;
-    public Item Item { get; set; } = null!;
+    public ItemDefinition ItemDefinition { get; set; } = null!;
     
     // Helper properties
     public Dictionary<string, object> RollData

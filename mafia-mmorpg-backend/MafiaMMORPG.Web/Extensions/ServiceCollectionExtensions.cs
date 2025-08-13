@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
         // Configuration
         services.Configure<BalanceOptions>(configuration.GetSection("Balance"));
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
+        services.Configure<ProgressionOptions>(configuration.GetSection("Progression"));
+        services.Configure<LootOptions>(configuration.GetSection("Loot"));
 
         // Database
         services.AddDbContext<ApplicationDbContext>(options =>
@@ -197,6 +199,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICombatService, CombatService>();
         services.AddScoped<ILeaderboardService, LeaderboardService>();
         services.AddScoped<ISeasonService, SeasonService>();
+        services.AddScoped<IProgressionService, ProgressionService>();
+        services.AddScoped<IQuestService, QuestService>();
+        services.AddScoped<ILootService, LootService>();
    
 
         // Quartz Jobs

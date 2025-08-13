@@ -2,6 +2,7 @@ using MafiaMMORPG.Application.Interfaces;
 using MafiaMMORPG.Infrastructure.Data;
 using MafiaMMORPG.Application.Repositories;
 using MafiaMMORPG.Domain.Entities;
+using MafiaMMORPG.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -154,7 +155,7 @@ public class SeasonService : ISeasonService
             {
                 Id = Guid.NewGuid(),
                 PlayerId = player.PlayerId,
-                ItemId = item.Id,
+                ItemDefinitionId = item.Id,
                 IsEquipped = false,
                 RollDataJson = "{}"
             };

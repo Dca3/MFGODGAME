@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using MafiaMMORPG.Domain.Enums;
 
 namespace MafiaMMORPG.Domain.Entities;
 
@@ -35,10 +36,4 @@ public class Item
     }
 }
 
-public enum ItemRarity
-{
-    Common = 0,
-    Rare = 1,
-    Epic = 2,
-    Legendary = 3
-}
+

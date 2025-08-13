@@ -29,7 +29,7 @@ public static class InventoryEndpoints
             {
                 // Get player inventory item
                 var inventoryItem = await inventoryRepo.FirstOrDefaultAsync(
-                    pi => pi.PlayerId == playerId && pi.ItemId == itemId, 
+                    pi => pi.PlayerId == playerId && pi.ItemDefinitionId == itemId, 
                     asNoTracking: false, 
                     ct);
 
@@ -38,7 +38,7 @@ public static class InventoryEndpoints
 
                 // Unequip current item in same slot
                 var currentEquipped = await inventoryRepo.FirstOrDefaultAsync(
-                    pi => pi.PlayerId == playerId && pi.IsEquipped && pi.Item.Slot == inventoryItem.Item.Slot,
+                    pi => pi.PlayerId == playerId && pi.IsEquipped && pi.ItemDefinition.Slot == inventoryItem.ItemDefinition.Slot,
                     asNoTracking: false,
                     ct);
 

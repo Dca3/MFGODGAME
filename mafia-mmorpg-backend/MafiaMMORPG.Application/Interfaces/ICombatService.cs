@@ -2,8 +2,9 @@ using MafiaMMORPG.Application.DTOs;
 
 namespace MafiaMMORPG.Application.Interfaces;
 
+public record PveSimulationResult(bool Success, string? ErrorMessage = null);
+
 public interface ICombatService
 {
-    CombatResult SimulatePve(CombatRequest req);   // NPC görev dövüşü
-    CombatResult SimulatePvp(CombatRequest req);   // Düello (server-otoriter)
+    Task<PveSimulationResult> SimulatePveAsync(Guid playerId, Guid questId, CancellationToken ct = default);
 }

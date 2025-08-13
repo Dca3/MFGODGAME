@@ -45,6 +45,15 @@ public class CombatService : ICombatService
         throw new NotImplementedException("PvE combat not implemented yet");
     }
 
+    public async Task<PveSimulationResult> SimulatePveAsync(Guid playerId, Guid questId, CancellationToken ct = default)
+    {
+        // Basit PvE simülasyonu - %80 başarı şansı
+        var random = new Random();
+        var success = random.NextDouble() < 0.8;
+        
+        return new PveSimulationResult(success);
+    }
+
     public CombatResult SimulatePvp(CombatRequest req)
     {
         var seed = GenerateSeed(req.DuelId);
@@ -149,10 +158,11 @@ public class CombatService : ICombatService
         // Apply item bonuses
         foreach (var item in equippedItems)
         {
-            foreach (var affix in item.Item.Affixes)
-            {
-                ApplyAffix(effectiveStats, affix);
-            }
+            // TODO: Apply ItemDefinition bonuses when affix system is implemented
+            // foreach (var affix in item.ItemDefinition.Affixes)
+            // {
+            //     ApplyAffix(effectiveStats, affix);
+            // }
         }
         
         // Calculate derived stats

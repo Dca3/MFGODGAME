@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<PlayerStats> PlayerStats { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<ItemAffix> ItemAffixes { get; set; }
+    public DbSet<ItemDefinition> ItemDefinitions { get; set; }
     public DbSet<PlayerInventory> PlayerInventories { get; set; }
     public DbSet<Quest> Quests { get; set; }
     public DbSet<PlayerQuest> PlayerQuests { get; set; }
@@ -69,6 +70,18 @@ public class ApplicationDbContext : IdentityDbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // ItemDefinition configurations
+        builder.Entity<ItemDefinition>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Slot).HasConversion<string>();
+            entity.Property(e => e.Rarity).HasConversion<string>();
+            entity.Property(e => e.ItemLevel).IsRequired();
+            entity.Property(e => e.RequiredLevel).IsRequired();
+            entity.Property(e => e.AffixJson).HasColumnType("jsonb");
+        });
+
         // PlayerInventory configurations
         builder.Entity<PlayerInventory>(entity =>
         {
@@ -79,11 +92,11 @@ public class ApplicationDbContext : IdentityDbContext
                 .WithMany(e => e.Inventory)
                 .HasForeignKey(e => e.PlayerId)
                 .OnDelete(DeleteBehavior.Cascade);
-            entity.HasOne(e => e.Item)
+            entity.HasOne(e => e.ItemDefinition)
                 .WithMany(e => e.PlayerInventories)
-                .HasForeignKey(e => e.ItemId)
+                .HasForeignKey(e => e.ItemDefinitionId)
                 .OnDelete(DeleteBehavior.Cascade);
-            entity.HasIndex(e => new { e.PlayerId, e.ItemId }).IsUnique();
+            entity.HasIndex(e => new { e.PlayerId, e.ItemDefinitionId }).IsUnique();
         });
 
         // Quest configurations
