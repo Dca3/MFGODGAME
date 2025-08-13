@@ -128,7 +128,7 @@ public static class AuthEndpoints
 
                 // Revoke existing refresh tokens (optional)
                 var existingTokens = await db.RefreshTokens
-                    .Where(rt => rt.UserId == user.Id && rt.IsActive)
+                    .Where(rt => rt.UserId == user.Id && rt.RevokedAt == null && rt.ExpiresAt > DateTime.UtcNow)
                     .ToListAsync();
 
                 foreach (var token in existingTokens)
@@ -174,7 +174,7 @@ public static class AuthEndpoints
                 var refreshToken = await db.RefreshTokens
                     .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken);
 
-                if (refreshToken == null || !refreshToken.IsActive || refreshToken.IsExpired)
+                if (refreshToken == null || refreshToken.RevokedAt != null || refreshToken.ExpiresAt <= DateTime.UtcNow)
                 {
                     return Results.Unauthorized();
                 }

@@ -22,8 +22,8 @@ import { LoginRequest } from '../../../shared/models/auth.models';
             <label class="block text-sm font-medium text-gray-300">Email veya Kullanıcı Adı</label>
             <input 
               type="text" 
-              [(ngModel)]="credentials.emailOrUserName" 
-              name="emailOrUserName"
+              [(ngModel)]="credentials.username" 
+              name="username"
               class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mafia-gold"
               required
             >
@@ -66,7 +66,7 @@ import { LoginRequest } from '../../../shared/models/auth.models';
 })
 export class LoginComponent {
   credentials: LoginRequest = {
-    emailOrUserName: '',
+    username: '',
     password: ''
   };
   
@@ -79,7 +79,7 @@ export class LoginComponent {
   ) {}
 
   async onLogin(): Promise<void> {
-    if (!this.credentials.emailOrUserName || !this.credentials.password) {
+    if (!this.credentials.username || !this.credentials.password) {
       this.error = 'Lütfen tüm alanları doldurun';
       return;
     }

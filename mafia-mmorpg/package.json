@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:mafia-mmorpg": "node dist/mafia-mmorpg/server/server.mjs"
+    "serve:ssr:mafia-mmorpg": "node dist/mafia-mmorpg/server/server.mjs",
+    "build:css": "tailwindcss -i ./src/styles.css -o ./src/styles.output.css --watch"
   },
   "prettier": {
     "overrides": [

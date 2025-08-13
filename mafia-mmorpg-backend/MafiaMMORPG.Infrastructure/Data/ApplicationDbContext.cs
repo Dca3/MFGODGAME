@@ -184,6 +184,11 @@ public class ApplicationDbContext : IdentityDbContext
                         entity.HasKey(e => e.Id);
                         entity.HasIndex(e => e.UserId);
                         entity.HasIndex(e => e.Token).IsUnique();
+                        
+                        // Ignore computed properties
+                        entity.Ignore(e => e.IsExpired);
+                        entity.Ignore(e => e.IsRevoked);
+                        entity.Ignore(e => e.IsActive);
                     });
 
         // Season configurations
