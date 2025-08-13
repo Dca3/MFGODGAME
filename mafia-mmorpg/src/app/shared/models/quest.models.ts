@@ -4,6 +4,8 @@ export interface QuestDto {
   description: string;
   difficulty: 'Easy' | 'Normal' | 'Hard' | 'Mythic';
   requiredLevel: number;
+  durationMinutes: number;
+  cooldownMinutes: number;
   location: string;
   npcName: string;
 }

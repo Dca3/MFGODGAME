@@ -19,6 +19,12 @@ public class Quest
     public QuestDifficulty Difficulty { get; set; } = QuestDifficulty.Easy;
     public int RequiredLevel { get; set; } = 1;
     
+    // Quest duration in minutes
+    public int DurationMinutes { get; set; } = 30;
+    
+    // Cooldown in minutes after quest completion
+    public int CooldownMinutes { get; set; } = 60;
+    
     public string StoryJson { get; set; } = "{}";
     
     public string RewardsJson { get; set; } = "[]";

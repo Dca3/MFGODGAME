@@ -21,6 +21,20 @@ public class LootService : ILootService
 
     public async Task<(ItemRarity rarity, Guid itemDefinitionId)?> RollAsync(Guid playerId, Guid questId, QuestDifficulty diff, int playerLevel, CancellationToken ct = default)
     {
+        // Quest difficulty'ye göre loot chance
+        var lootChance = diff switch
+        {
+            QuestDifficulty.Easy => 0.3,      // %30 şans
+            QuestDifficulty.Normal => 0.5,    // %50 şans
+            QuestDifficulty.Hard => 0.7,      // %70 şans
+            QuestDifficulty.Mythic => 0.9,    // %90 şans
+            _ => 0.3
+        };
+
+        // Loot chance kontrolü
+        if (Random.Shared.NextDouble() > lootChance)
+            return null;
+
         // Ultra-nadir Legendary kontrolü
         if (_options.UseUInt64Rng)
         {
@@ -38,7 +52,7 @@ public class LootService : ILootService
             }
         }
 
-        // Normal rarity table
+        // Normal rarity table - difficulty'ye göre ayarlanmış
         var difficultyKey = diff.ToString();
         if (!_options.RarityRates.ContainsKey(difficultyKey))
             return null;

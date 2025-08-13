@@ -6,7 +6,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuestsService } from '../../core/services/quests.service';
+import { PlayerService } from '../../core/services/player.service';
 import { QuestDto, QuestCompleteResult } from '../../shared/models/quest.models';
+import { PlayerProfileDto } from '../../shared/models/player.models';
 
 @Component({
   selector: 'app-quests',
@@ -20,7 +22,13 @@ import { QuestDto, QuestCompleteResult } from '../../shared/models/quest.models'
   ],
   template: `
     <div class="container mx-auto p-6">
-      <h1 class="text-3xl font-bold mb-6 text-mafia-accent">Görevler</h1>
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-mafia-accent">Görevler</h1>
+        <div class="text-right">
+          <p class="text-lg font-semibold text-mafia-accent">Seviye {{ playerLevel }}</p>
+          <p class="text-sm text-gray-400">Maksimum Seviye: 50</p>
+        </div>
+      </div>
       
       <div *ngIf="loading" class="flex justify-center">
         <mat-spinner></mat-spinner>
@@ -51,7 +59,8 @@ import { QuestDto, QuestCompleteResult } from '../../shared/models/quest.models'
 
             <div class="text-sm text-gray-400">
               <p>Tahmini Ödüller:</p>
-              <p>XP: {{ getEstimatedXp(quest.difficulty) }} | Para: {{ getEstimatedMoney(quest.difficulty) }}</p>
+              <p>XP: {{ getEstimatedXpForLevel(quest.difficulty, playerLevel) }} | Para: {{ getEstimatedMoney(quest.difficulty) }}</p>
+              <p class="mt-2">Süre: {{ quest.durationMinutes }} dakika | Bekleme: {{ quest.cooldownMinutes }} dakika</p>
             </div>
           </mat-card-content>
 
@@ -92,14 +101,28 @@ import { QuestDto, QuestCompleteResult } from '../../shared/models/quest.models'
 export class QuestsComponent implements OnInit {
   quests: (QuestDto & { started?: boolean; completing?: boolean })[] = [];
   loading = true;
+  playerLevel = 1;
 
   constructor(
     private questsService: QuestsService,
+    private playerService: PlayerService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.loadPlayerProfile();
     this.loadQuests();
+  }
+
+  loadPlayerProfile(): void {
+    this.playerService.getProfile().subscribe({
+      next: (profile: PlayerProfileDto) => {
+        this.playerLevel = profile.level;
+      },
+      error: (error) => {
+        console.error('Player profile yüklenirken hata:', error);
+      }
+    });
   }
 
   loadQuests(): void {
@@ -159,6 +182,11 @@ export class QuestsComponent implements OnInit {
           
           this.snackBar.open(message, 'Kapat', { duration: 5000 });
           
+          // Player level'ını güncelle
+          if (result.newLevel) {
+            this.playerLevel = result.newLevel;
+          }
+          
           // Görevi listeden kaldır
           this.quests = this.quests.filter(q => q.id !== questId);
         } else {
@@ -201,6 +229,12 @@ export class QuestsComponent implements OnInit {
       case 'Mythic': return 650;
       default: return 100;
     }
+  }
+
+  getEstimatedXpForLevel(difficulty: string, playerLevel: number): number {
+    const baseXp = this.getEstimatedXp(difficulty);
+    const levelMultiplier = 1.0 + (playerLevel - 1) * 0.1; // Her level %10 artış
+    return Math.floor(baseXp * levelMultiplier);
   }
 
   getEstimatedMoney(difficulty: string): number {

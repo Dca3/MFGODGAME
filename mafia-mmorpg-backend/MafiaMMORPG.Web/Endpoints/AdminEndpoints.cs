@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using MafiaMMORPG.Application.Interfaces;
 using MafiaMMORPG.Infrastructure.Data;
+using MafiaMMORPG.Web.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace MafiaMMORPG.Web.Endpoints;
@@ -66,6 +67,29 @@ public static class AdminEndpoints
         .WithName("CloseSeason")
         .WithOpenApi()
         .RequireAuthorization();
+
+        app.MapGet("/admin/xp-analysis", async (IProgressionService progressionService) =>
+        {
+            // XP progression analizi
+            var progression = progressionService.GetXpProgression();
+            
+            var analysis = new
+            {
+                TotalLevels = 49, // 1'den 50'ye
+                TotalXpNeeded = progression.Last().totalXp,
+                LevelProgression = progression.Select(p => new
+                {
+                    Level = p.level,
+                    XpToNext = p.xpNeeded,
+                    TotalXp = p.totalXp
+                }).ToList()
+            };
+            
+            return Results.Ok(analysis);
+        })
+        .WithName("GetXpAnalysis")
+        .WithOpenApi()
+        .RequireAuthorization("Admin");
 
         return app;
     }

@@ -25,6 +25,25 @@ import { PlayerProfileDto, PlayerStatsDto } from '../../shared/models/player.mod
               <p class="text-gray-300"><span class="text-mafia-gold">Oluşturulma:</span> {{ profile.createdAt | date }}</p>
             </div>
           </div>
+          
+          <!-- XP Bar -->
+          <div class="mt-6">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-gray-300">Deneyim Puanı</span>
+              <span class="text-mafia-gold font-semibold">{{ profile.experience }} / {{ getXpToNextLevel(profile.level) }}</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-4">
+              <div 
+                class="bg-gradient-to-r from-mafia-gold to-yellow-400 h-4 rounded-full transition-all duration-300"
+                [style.width.%]="getXpPercentage(profile.experience, profile.level)">
+              </div>
+            </div>
+            <div class="text-center mt-2">
+              <span class="text-sm text-gray-400">
+                Sonraki seviyeye {{ getXpToNextLevel(profile.level) - profile.experience }} XP kaldı
+              </span>
+            </div>
+          </div>
         </div>
 
         <div *ngIf="stats" class="bg-mafia-secondary rounded-lg p-6">
@@ -83,5 +102,20 @@ export class ProfileComponent implements OnInit {
         console.error('Stats load error:', error);
       }
     });
+  }
+
+  // XP hesaplama metodları
+  getXpToNextLevel(currentLevel: number): number {
+    if (currentLevel >= 50) return 0; // Max level
+    const baseXp = 100;
+    const curveK = 1.5;
+    const curvePow = 1.2;
+    return baseXp + Math.floor(baseXp * curveK * Math.pow(currentLevel, curvePow));
+  }
+
+  getXpPercentage(currentXp: number, currentLevel: number): number {
+    if (currentLevel >= 50) return 100; // Max level
+    const xpToNext = this.getXpToNextLevel(currentLevel);
+    return Math.min(100, (currentXp / xpToNext) * 100);
   }
 }

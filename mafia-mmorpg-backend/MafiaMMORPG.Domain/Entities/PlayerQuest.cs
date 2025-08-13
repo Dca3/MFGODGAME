@@ -14,6 +14,9 @@ public class PlayerQuest
     
     public DateTime? StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
+    
+    // Cooldown tracking
+    public DateTime? CooldownUntil { get; set; }
 
     // Navigation properties
     public Player Player { get; set; } = null!;
@@ -21,6 +24,11 @@ public class PlayerQuest
     
     // ÖNEMLİ: Tipli koleksiyon yap
     public List<QuestProgress> Progress { get; set; } = new();
+
+    // Helper methods
+    public bool IsOnCooldown => CooldownUntil.HasValue && CooldownUntil.Value > DateTime.UtcNow;
+    public bool IsActive => State == PlayerQuestState.Active && StartedAt.HasValue;
+    public bool CanStart => State == PlayerQuestState.Available && !IsOnCooldown;
 }
 
 public enum PlayerQuestState

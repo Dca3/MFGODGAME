@@ -43,10 +43,17 @@ public class QuestService : IQuestService
                 continue;
 
             var existingQuest = player.Quests.FirstOrDefault(pq => pq.QuestId == quest.Id);
+            
+            // Check if quest is completed
             if (existingQuest?.State == PlayerQuestState.Completed)
                 continue;
 
+            // Check if quest is active
             if (existingQuest?.State == PlayerQuestState.Active)
+                continue;
+                
+            // Check if quest is on cooldown
+            if (existingQuest?.IsOnCooldown == true)
                 continue;
 
             availableQuests.Add(quest);
@@ -68,8 +75,15 @@ public class QuestService : IQuestService
         if (quest == null)
             return false;
 
+        // Check if player has any active quests
+        var activeQuest = player.Quests.FirstOrDefault(pq => pq.State == PlayerQuestState.Active);
+        if (activeQuest != null)
+            return false; // Can't start new quest while one is active
+
         var existingQuest = player.Quests.FirstOrDefault(pq => pq.QuestId == questId);
-        if (existingQuest?.State == PlayerQuestState.Active)
+        
+        // Check if quest is on cooldown
+        if (existingQuest?.IsOnCooldown == true)
             return false;
 
         if (existingQuest == null)
@@ -111,6 +125,20 @@ public class QuestService : IQuestService
         if (playerQuest?.State != PlayerQuestState.Active)
             return new QuestCompleteResult(false, 0, 0, new List<Guid>(), null, null);
 
+        // Check if quest duration has expired
+        if (playerQuest.StartedAt.HasValue)
+        {
+            var questDuration = TimeSpan.FromMinutes(quest.DurationMinutes);
+            var timeElapsed = DateTime.UtcNow - playerQuest.StartedAt.Value;
+            
+            if (timeElapsed > questDuration)
+            {
+                playerQuest.State = PlayerQuestState.Failed;
+                await _db.SaveChangesAsync(ct);
+                return new QuestCompleteResult(false, 0, 0, new List<Guid>(), null, null);
+            }
+        }
+
         var combatResult = await _combatService.SimulatePveAsync(playerId, questId, ct);
         if (!combatResult.Success)
         {
@@ -119,7 +147,7 @@ public class QuestService : IQuestService
             return new QuestCompleteResult(false, 0, 0, new List<Guid>(), null, null);
         }
 
-        var (gainedXp, money) = GetQuestRewards(quest.Difficulty);
+        var (gainedXp, money) = GetQuestRewards(quest.Difficulty, player.Level);
         var rewardItemIds = new List<Guid>();
 
         var lootResult = await _lootService.RollAsync(playerId, questId, quest.Difficulty, player.Level, ct);
@@ -139,12 +167,19 @@ public class QuestService : IQuestService
 
         var currentLevel = player.Level;
         var currentXp = player.Experience;
+        
+        // Debug log
+        Console.WriteLine($"DEBUG: Player {playerId} - Level: {currentLevel}, XP: {currentXp}, Gained XP: {gainedXp}");
+        
         var (newLevel, gainedFreePoints) = _progressionService.ApplyXp(
             ref currentLevel, 
             ref currentXp, 
             gainedXp, 
             5,
-            100);
+            50);
+        
+        // Debug log
+        Console.WriteLine($"DEBUG: After ApplyXp - New Level: {newLevel}, New XP: {currentXp}, Gained Free Points: {gainedFreePoints}");
         
         player.Level = currentLevel;
         player.Experience = currentXp;
@@ -157,6 +192,9 @@ public class QuestService : IQuestService
         player.Money += money;
         playerQuest.State = PlayerQuestState.Completed;
         playerQuest.CompletedAt = DateTime.UtcNow;
+        
+        // Set cooldown for this quest
+        playerQuest.CooldownUntil = DateTime.UtcNow.AddMinutes(quest.CooldownMinutes);
 
         await _db.SaveChangesAsync(ct);
 
@@ -169,9 +207,10 @@ public class QuestService : IQuestService
             gainedFreePoints > 0 ? gainedFreePoints : null);
     }
 
-    private (int xp, int money) GetQuestRewards(QuestDifficulty difficulty)
+    private (int xp, int money) GetQuestRewards(QuestDifficulty difficulty, int playerLevel)
     {
-        return difficulty switch
+        // Base rewards by difficulty
+        var baseRewards = difficulty switch
         {
             QuestDifficulty.Easy => (120, 150),
             QuestDifficulty.Normal => (220, 300),
@@ -179,5 +218,11 @@ public class QuestService : IQuestService
             QuestDifficulty.Mythic => (650, 1200),
             _ => (100, 100)
         };
+
+        // Scale XP by player level (higher level = more XP needed)
+        var levelMultiplier = 1.0 + (playerLevel - 1) * 0.1; // Her level %10 artış
+        var scaledXp = (int)(baseRewards.Item1 * levelMultiplier);
+
+        return (scaledXp, baseRewards.Item2);
     }
 }
