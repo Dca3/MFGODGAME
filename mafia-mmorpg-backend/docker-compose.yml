@@ -54,7 +54,7 @@ services:
     image: dpage/pgadmin4:latest
     container_name: mmrpg-pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@mafya.local
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
       - "5050:80"
