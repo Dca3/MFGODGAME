@@ -43,6 +43,7 @@ public static class AuthEndpoints
                 var player = new Player
                 {
                     Id = Guid.Parse(user.Id),
+                    UserId = user.Id,
                     Username = user.UserName!,
                     Level = 1,
                     Money = 1000,
@@ -54,11 +55,11 @@ public static class AuthEndpoints
                 var stats = new PlayerStats
                 {
                     PlayerId = player.Id,
-                    Karizma = 0,
-                    Guc = 0,
-                    Zeka = 0,
-                    Hayat = 0,
-                    FreePoints = 5
+                    Karizma = 5,
+                    Guc = 5,
+                    Zeka = 5,
+                    Hayat = 5,
+                    FreePoints = 0
                 };
 
                 // Create Rating

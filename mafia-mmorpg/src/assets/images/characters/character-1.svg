@@ -1,0 +1,35 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="60" cy="60" r="58" fill="#2d3748" stroke="#f59e0b" stroke-width="2"/>
+  
+  <!-- Fedora Hat -->
+  <ellipse cx="60" cy="35" rx="25" ry="8" fill="#1a202c"/>
+  <ellipse cx="60" cy="27" rx="22" ry="6" fill="#1a202c"/>
+  <ellipse cx="60" cy="19" rx="18" ry="4" fill="#1a202c"/>
+  
+  <!-- Hat Band -->
+  <ellipse cx="60" cy="35" rx="25" ry="8" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  
+  <!-- Face -->
+  <ellipse cx="60" cy="55" rx="18" ry="22" fill="#fbd38d"/>
+  
+  <!-- Eyes -->
+  <ellipse cx="52" cy="50" rx="3" ry="4" fill="#1a202c"/>
+  <ellipse cx="68" cy="50" rx="3" ry="4" fill="#1a202c"/>
+  
+  <!-- Eyebrows -->
+  <path d="M49 44 Q52 42 55 44" fill="none" stroke="#1a202c" stroke-width="2"/>
+  <path d="M65 44 Q68 42 71 44" fill="none" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Mouth -->
+  <path d="M55 65 Q60 68 65 65" fill="none" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Suit -->
+  <rect x="42" y="70" width="36" height="25" fill="#1a202c"/>
+  
+  <!-- Shirt -->
+  <ellipse cx="60" cy="72" rx="15" ry="8" fill="white"/>
+  
+  <!-- Tie -->
+  <path d="M60 70 L58 85 L60 90 L62 85 Z" fill="#1a202c"/>
+</svg>

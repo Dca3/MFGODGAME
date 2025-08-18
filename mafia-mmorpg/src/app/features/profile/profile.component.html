@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <button class="back-btn" (click)="goBack()">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+        </svg>
+        Geri
+      </button>
+    </div>
+    
+    <h1 class="text-4xl font-bold text-white mb-8 flex items-center gap-3">
+      <svg class="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+      </svg>
+      Profil
+    </h1>
+    
+    <div *ngIf="profile" class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+      <div class="flex items-start gap-6">
+        <!-- Character Portrait -->
+        <div class="flex-shrink-0">
+          <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-500 bg-gray-700 flex items-center justify-center">
+            <img [src]="getCharacterImage()" [alt]="'Character ' + getCharacterVariant()" class="w-full h-full object-cover">
+          </div>
+          <div class="text-center mt-2">
+            <span class="text-sm text-gray-400">Karakter {{ getCharacterVariant() }}</span>
+          </div>
+        </div>
+        
+        <!-- Character Info -->
+        <div class="flex-1">
+          <h2 class="text-2xl font-bold text-yellow-500 mb-4">Karakter Bilgileri</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-gray-300"><span class="text-yellow-500">ID:</span> {{ profile.id }}</p>
+              <p class="text-gray-300"><span class="text-yellow-500">Seviye:</span> {{ profile.level }}</p>
+              <p class="text-gray-300"><span class="text-yellow-500">Para:</span> ${{ profile.money }}</p>
+              <p class="text-gray-300"><span class="text-yellow-500">İtibar:</span> {{ profile.reputation }}</p>
+            </div>
+            <div>
+              <p class="text-gray-300"><span class="text-yellow-500">Oluşturulma:</span> {{ profile.createdAt | date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- XP Bar -->
+      <div class="mt-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-gray-300">Deneyim Puanı</span>
+          <span class="text-yellow-500 font-semibold">{{ profile.experience || 0 }} / {{ getXpToNextLevel(profile.level) }}</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-4">
+          <div 
+            class="bg-gradient-to-r from-yellow-500 to-yellow-400 h-4 rounded-full transition-all duration-300"
+            [style.width.%]="getXpPercentage(profile.experience || 0, profile.level)">
+          </div>
+        </div>
+        <div class="text-center mt-2">
+          <span class="text-sm text-gray-400">
+            Sonraki seviyeye {{ getXpToNextLevel(profile.level) - (profile.experience || 0) }} XP kaldı
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="stats" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <h2 class="text-2xl font-bold text-yellow-500 mb-4">Karakter İstatistikleri</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-gray-300"><span class="text-yellow-500">Karizma (K):</span> {{ stats.Karizma }}</p>
+          <p class="text-gray-300"><span class="text-yellow-500">Güç (G):</span> {{ stats.Guc }}</p>
+          <p class="text-gray-300"><span class="text-yellow-500">Zeka (Z):</span> {{ stats.Zeka }}</p>
+          <p class="text-gray-300"><span class="text-yellow-500">Hayat (H):</span> {{ stats.Hayat }}</p>
+        </div>
+        <div>
+          <p class="text-gray-300"><span class="text-yellow-500">Kullanılabilir Puan:</span> {{ stats.FreePoints }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center text-yellow-500">
+      Yükleniyor...
+    </div>
+  </div>
+</div>

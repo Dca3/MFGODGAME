@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest } from '../../../shared/models/auth.models';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-mafia-primary">
       <div class="max-w-md w-full space-y-8 p-8 bg-mafia-secondary rounded-lg shadow-lg">
@@ -101,7 +101,7 @@ export class RegisterComponent {
 
     try {
       await this.authService.register(this.request);
-      this.router.navigate(['/lobby']);
+      this.router.navigate(['/dashboard']);
     } catch (error) {
       this.error = 'Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.';
       console.error('Register error:', error);

@@ -12,7 +12,7 @@ public static class QuestEndpoints
         app.MapGet("/quests/available", async (ClaimsPrincipal user, IQuestService questService, ApplicationDbContext db) =>
         {
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var playerId))
+            if (string.IsNullOrEmpty(userId))
                 return Results.Unauthorized();
 
             var player = await db.Players.FirstOrDefaultAsync(p => p.UserId == userId);
@@ -29,7 +29,7 @@ public static class QuestEndpoints
         app.MapPost("/quests/{id}/start", async (Guid id, ClaimsPrincipal user, IQuestService questService, ApplicationDbContext db) =>
         {
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var playerId))
+            if (string.IsNullOrEmpty(userId))
                 return Results.Unauthorized();
 
             var player = await db.Players.FirstOrDefaultAsync(p => p.UserId == userId);
@@ -49,7 +49,7 @@ public static class QuestEndpoints
         app.MapPost("/quests/{id}/complete", async (Guid id, ClaimsPrincipal user, IQuestService questService, ApplicationDbContext db) =>
         {
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var playerId))
+            if (string.IsNullOrEmpty(userId))
                 return Results.Unauthorized();
 
             var player = await db.Players.FirstOrDefaultAsync(p => p.UserId == userId);

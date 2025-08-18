@@ -1,0 +1,233 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4">
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-4">
+      <button class="back-btn" (click)="goBack()">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+        </svg>
+        Geri
+      </button>
+    </div>
+    
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-white flex items-center gap-3">
+        <svg class="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
+        </svg>
+        Envanter
+      </h1>
+      <div class="flex items-center gap-4">
+        <div class="bg-gray-800 rounded-lg px-4 py-2">
+          <span class="text-gray-400 text-sm">Seviye</span>
+          <div class="text-white font-semibold">{{ profile?.level || 1 }}</div>
+        </div>
+        <div class="bg-gray-800 rounded-lg px-4 py-2">
+          <span class="text-gray-400 text-sm">Para</span>
+          <div class="text-yellow-500 font-semibold">${{ profile?.money || 0 }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+    </div>
+
+    <!-- Inventory Content -->
+    <div *ngIf="!loading" class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      
+      <!-- Equipment Slots (Left Side) -->
+      <div class="lg:col-span-1">
+        <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <h2 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+           
+            Ekipman
+          </h2>
+          
+                     <!-- Equipment Grid -->
+           <div class="equipment-layout">
+             <!-- Head Slot -->
+             <div class="equipment-slot head-slot" 
+                  [class.equipped]="getEquippedItem('Head')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Head'"
+                  (click)="onSlotClick('Head')"
+                  (dragover)="onDragOver($event, 'Head')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Head')">
+               <div class="slot-frame">
+                 <div class="slot-icon">👤</div>
+                 <div class="slot-label">Kafa</div>
+                 <div *ngIf="getEquippedItem('Head')" class="item-preview">
+                   <img [src]="getItemImage(getEquippedItem('Head')?.slot || 'Head', getEquippedItem('Head')?.rarity || 'Common')" [alt]="getEquippedItem('Head')?.name || ''" class="w-8 h-8">
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Weapon Slot -->
+             <div class="equipment-slot weapon-slot" 
+                  [class.equipped]="getEquippedItem('Weapon')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Weapon'"
+                  (click)="onSlotClick('Weapon')"
+                  (dragover)="onDragOver($event, 'Weapon')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Weapon')">
+               <div class="slot-frame">
+                 <div class="slot-icon">⚔️</div>
+                 <div class="slot-label">Silah</div>
+                 <div *ngIf="getEquippedItem('Weapon')" class="item-preview">
+                   <img [src]="getItemImage(getEquippedItem('Weapon')?.slot || 'Weapon', getEquippedItem('Weapon')?.rarity || 'Common')" [alt]="getEquippedItem('Weapon')?.name || ''" class="w-8 h-8">
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Chest Slot -->
+             <div class="equipment-slot chest-slot" 
+                  [class.equipped]="getEquippedItem('Chest')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Chest'"
+                  (click)="onSlotClick('Chest')"
+                  (dragover)="onDragOver($event, 'Chest')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Chest')">
+               <div class="slot-frame">
+                 <div class="slot-icon">🛡️</div>
+                 <div class="slot-label">Göğüs</div>
+                 <div *ngIf="getEquippedItem('Chest')" class="item-preview">
+                   <img [src]="getItemImage(getEquippedItem('Chest')?.slot || 'Chest', getEquippedItem('Chest')?.rarity || 'Common')" [alt]="getEquippedItem('Chest')?.name || ''" class="w-8 h-8">
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Hands Slot -->
+             <div class="equipment-slot hands-slot" 
+                  [class.equipped]="getEquippedItem('Hands')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Hands'"
+                  (click)="onSlotClick('Hands')"
+                  (dragover)="onDragOver($event, 'Hands')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Hands')">
+               <div class="slot-frame">
+                 <div class="slot-icon">✋</div>
+                 <div class="slot-label">Eller</div>
+                 <div *ngIf="getEquippedItem('Hands')" class="item-preview">
+                   <img [src]="getItemImage(getEquippedItem('Hands')?.slot || 'Hands', getEquippedItem('Hands')?.rarity || 'Common')" [alt]="getEquippedItem('Hands')?.name || ''" class="w-8 h-8">
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Legs Slot -->
+             <div class="equipment-slot legs-slot" 
+                  [class.equipped]="getEquippedItem('Legs')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Legs'"
+                  (click)="onSlotClick('Legs')"
+                  (dragover)="onDragOver($event, 'Legs')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Legs')">
+                               <div class="slot-frame">
+                  <div class="slot-icon">👖</div>
+                  <div class="slot-label">Bacak</div>
+                  <div *ngIf="getEquippedItem('Legs')" class="item-preview">
+                    <img [src]="getItemImage(getEquippedItem('Legs')?.slot || 'Legs', getEquippedItem('Legs')?.rarity || 'Common')" [alt]="getEquippedItem('Legs')?.name || ''" class="w-8 h-8">
+                  </div>
+                </div>
+             </div>
+             
+             <!-- Feet Slot -->
+             <div class="equipment-slot feet-slot" 
+                  [class.equipped]="getEquippedItem('Feet')" 
+                  [class.drag-over]="dragState.draggedSlot === 'Feet'"
+                  (click)="onSlotClick('Feet')"
+                  (dragover)="onDragOver($event, 'Feet')"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onSlotDrop($event, 'Feet')">
+               <div class="slot-frame">
+                 <div class="slot-icon">👟</div>
+                 <div class="slot-label">Ayak</div>
+                 <div *ngIf="getEquippedItem('Feet')" class="item-preview">
+                   <img [src]="getItemImage(getEquippedItem('Feet')?.slot || 'Feet', getEquippedItem('Feet')?.rarity || 'Common')" [alt]="getEquippedItem('Feet')?.name || ''" class="w-8 h-8">
+                 </div>
+               </div>
+             </div>
+           </div>
+        </div>
+      </div>
+
+      <!-- Inventory Bag (Right Side) -->
+      <div class="lg:col-span-3">
+        <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+              </svg>
+              Çanta
+            </h2>
+            <div class="text-sm text-gray-400">
+              {{ inventory.length }} / 50 eşya
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="inventory.length === 0" class="text-center py-12">
+            <div class="text-gray-500 mb-4">
+              <svg class="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+              </svg>
+            </div>
+            <p class="text-gray-400">Çantanız boş</p>
+            <p class="text-gray-500 text-sm">Quest yaparak eşya kazanabilirsiniz</p>
+          </div>
+
+          <!-- Inventory Grid -->
+          <div *ngIf="inventory.length > 0" class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+            <div 
+              *ngFor="let item of inventory" 
+              class="inventory-item"
+              [class.equipped]="item.isEquipped"
+              [class.disabled]="item.requiredLevel > (profile?.level || 1)"
+              [class.dragging]="dragState.isDragging && dragState.draggedItem?.itemDefinitionId === item.itemDefinitionId"
+              draggable="true"
+              (click)="onItemClick(item)"
+              (dragstart)="onDragStart($event, item)"
+              (dragend)="onDragEnd($event)"
+            >
+                             <div class="item-image">
+                 <img [src]="getItemImage(item.slot || 'Weapon', item.rarity || 'Common')" [alt]="item.name" class="w-full h-full object-cover">
+                 <div *ngIf="item.isEquipped" class="equipped-badge">✓</div>
+               </div>
+              <div class="item-tooltip">
+                <div class="tooltip-header">
+                  <span class="tooltip-name">{{ item.name }}</span>
+                  <span class="tooltip-level">Sev. {{ item.requiredLevel }}</span>
+                </div>
+                                 <div class="tooltip-stats">
+                   <div *ngIf="item.baseK && item.baseK > 0" class="stat">K: +{{ item.baseK }}</div>
+                   <div *ngIf="item.baseG && item.baseG > 0" class="stat">G: +{{ item.baseG }}</div>
+                   <div *ngIf="item.baseZ && item.baseZ > 0" class="stat">Z: +{{ item.baseZ }}</div>
+                   <div *ngIf="item.baseH && item.baseH > 0" class="stat">H: +{{ item.baseH }}</div>
+                 </div>
+                <div class="tooltip-actions">
+                  <button 
+                    *ngIf="!item.isEquipped && item.requiredLevel <= (profile?.level || 1)"
+                    (click)="equipItem(item.itemDefinitionId); $event.stopPropagation()"
+                    class="action-btn equip-btn"
+                  >
+                    Tak
+                  </button>
+                  <button 
+                    *ngIf="item.isEquipped"
+                    (click)="unequipItem(item.itemDefinitionId); $event.stopPropagation()"
+                    class="action-btn unequip-btn"
+                  >
+                    Çıkar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

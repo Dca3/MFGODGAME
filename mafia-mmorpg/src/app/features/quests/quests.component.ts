@@ -187,8 +187,8 @@ export class QuestsComponent implements OnInit {
             this.playerLevel = result.newLevel;
           }
           
-          // Görevi listeden kaldır
-          this.quests = this.quests.filter(q => q.id !== questId);
+          // Quest listesini yeniden yükle
+          this.loadQuests();
         } else {
           this.snackBar.open('Görev başarısız oldu!', 'Kapat', { duration: 3000 });
         }

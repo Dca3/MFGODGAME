@@ -91,6 +91,29 @@ public static class AdminEndpoints
         .WithOpenApi()
         .RequireAuthorization("Admin");
 
+        app.MapGet("/xp-progression", async (IProgressionService progressionService) =>
+        {
+            // XP progression - herkes kullanabilir
+            var progression = progressionService.GetXpProgression();
+            
+            var analysis = new
+            {
+                TotalLevels = 49, // 1'den 50'ye
+                TotalXpNeeded = progression.Last().totalXp,
+                LevelProgression = progression.Select(p => new
+                {
+                    Level = p.level,
+                    XpToNext = p.xpNeeded,
+                    TotalXp = p.totalXp
+                }).ToList()
+            };
+            
+            return Results.Ok(analysis);
+        })
+        .WithName("GetXpProgression")
+        .WithOpenApi()
+        .RequireAuthorization();
+
         return app;
     }
 }

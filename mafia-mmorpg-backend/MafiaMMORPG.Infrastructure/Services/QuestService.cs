@@ -64,27 +64,41 @@ public class QuestService : IQuestService
 
     public async Task<bool> StartQuestAsync(Guid playerId, Guid questId, CancellationToken ct = default)
     {
+        Console.WriteLine($"DEBUG: StartQuestAsync - PlayerId: {playerId}, QuestId: {questId}");
+        
         var player = await _db.Players
             .Include(p => p.Quests)
             .FirstOrDefaultAsync(p => p.Id == playerId, ct);
 
         if (player == null)
+        {
+            Console.WriteLine($"DEBUG: Player not found for ID: {playerId}");
             return false;
+        }
 
         var quest = await _db.Quests.FindAsync(new object[] { questId }, ct);
         if (quest == null)
+        {
+            Console.WriteLine($"DEBUG: Quest not found for ID: {questId}");
             return false;
+        }
 
-        // Check if player has any active quests
-        var activeQuest = player.Quests.FirstOrDefault(pq => pq.State == PlayerQuestState.Active);
-        if (activeQuest != null)
-            return false; // Can't start new quest while one is active
-
+        // Check if this specific quest is already active
         var existingQuest = player.Quests.FirstOrDefault(pq => pq.QuestId == questId);
+        Console.WriteLine($"DEBUG: Existing quest state: {existingQuest?.State}, IsOnCooldown: {existingQuest?.IsOnCooldown}");
+        
+        if (existingQuest?.State == PlayerQuestState.Active)
+        {
+            Console.WriteLine($"DEBUG: Quest is already active");
+            return false; // This quest is already active
+        }
         
         // Check if quest is on cooldown
         if (existingQuest?.IsOnCooldown == true)
+        {
+            Console.WriteLine($"DEBUG: Quest is on cooldown until: {existingQuest.CooldownUntil}");
             return false;
+        }
 
         if (existingQuest == null)
         {
@@ -104,6 +118,7 @@ public class QuestService : IQuestService
         }
 
         await _db.SaveChangesAsync(ct);
+        Console.WriteLine($"DEBUG: Quest started successfully");
         return true;
     }
 

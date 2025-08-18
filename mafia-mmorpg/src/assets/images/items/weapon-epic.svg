@@ -1,0 +1,23 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="60" rx="8" fill="#6B21FF"/>
+  <rect x="8" y="8" width="44" height="44" rx="6" fill="#9333FF"/>
+  
+  <!-- Efsanevi Silah -->
+  <path d="M15 25L45 25L45 35L15 35L15 25Z" fill="#D2196F"/>
+  <rect x="20" y="27" width="20" height="6" fill="#9333FF"/>
+  <circle cx="25" cy="30" r="2" fill="#7C3AED"/>
+  <circle cx="35" cy="30" r="2" fill="#7C3AED"/>
+  
+  <!-- Mor parıltı efekti -->
+  <circle cx="18" cy="28" r="1" fill="#A855F7" opacity="0.9"/>
+  <circle cx="42" cy="32" r="1" fill="#A855F7" opacity="0.9"/>
+  <circle cx="30" cy="26" r="0.5" fill="#C084FC" opacity="0.7"/>
+  
+  <!-- Özel detaylar -->
+  <rect x="22" y="29" width="2" height="2" fill="#F3E8FF"/>
+  <rect x="36" y="29" width="2" height="2" fill="#F3E8FF"/>
+  
+  <!-- Enerji efekti -->
+  <path d="M15 25L17 23L19 25L21 23L23 25L25 23L27 25L29 23L31 25L33 23L35 25L37 23L39 25L41 23L43 25L45 25L45 35L43 33L41 35L39 33L37 35L35 33L33 35L31 33L29 35L27 33L25 35L23 33L21 35L19 33L17 35L15 33L15 25Z" fill="none" stroke="#A855F7" stroke-width="0.5" opacity="0.6"/>
+</svg>
+

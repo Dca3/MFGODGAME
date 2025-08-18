@@ -19,7 +19,7 @@ public static class ProfileEndpoints
 
             var player = await db.Players
                 .Where(p => p.Id == playerId)
-                .Select(p => new { p.Id, p.Username, p.Level, p.Money, p.Reputation, p.CreatedAt })
+                .Select(p => new { p.Id, p.Username, p.Level, p.Experience, p.Money, p.Reputation, p.CreatedAt })
                 .FirstOrDefaultAsync();
 
             if (player == null)

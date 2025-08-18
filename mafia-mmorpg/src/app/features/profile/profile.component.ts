@@ -1,83 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { PlayerService } from '../../core/services/player.service';
+import { XpProgressionService, XpProgressionData } from '../../core/services/xp-progression.service';
 import { PlayerProfileDto, PlayerStatsDto } from '../../shared/models/player.models';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="min-h-screen bg-mafia-primary p-8">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-bold text-mafia-gold mb-8">Profil</h1>
-        
-        <div *ngIf="profile" class="bg-mafia-secondary rounded-lg p-6 mb-6">
-          <h2 class="text-2xl font-bold text-mafia-gold mb-4">Karakter Bilgileri</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p class="text-gray-300"><span class="text-mafia-gold">ID:</span> {{ profile.id }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">Seviye:</span> {{ profile.level }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">Para:</span> {{ profile.money }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">İtibar:</span> {{ profile.reputation }}</p>
-            </div>
-            <div>
-              <p class="text-gray-300"><span class="text-mafia-gold">Oluşturulma:</span> {{ profile.createdAt | date }}</p>
-            </div>
-          </div>
-          
-          <!-- XP Bar -->
-          <div class="mt-6">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-300">Deneyim Puanı</span>
-              <span class="text-mafia-gold font-semibold">{{ profile.experience }} / {{ getXpToNextLevel(profile.level) }}</span>
-            </div>
-            <div class="w-full bg-gray-700 rounded-full h-4">
-              <div 
-                class="bg-gradient-to-r from-mafia-gold to-yellow-400 h-4 rounded-full transition-all duration-300"
-                [style.width.%]="getXpPercentage(profile.experience, profile.level)">
-              </div>
-            </div>
-            <div class="text-center mt-2">
-              <span class="text-sm text-gray-400">
-                Sonraki seviyeye {{ getXpToNextLevel(profile.level) - profile.experience }} XP kaldı
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="stats" class="bg-mafia-secondary rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-mafia-gold mb-4">Karakter İstatistikleri</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p class="text-gray-300"><span class="text-mafia-gold">Karizma (K):</span> {{ stats.k }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">Güç (G):</span> {{ stats.g }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">Zeka (Z):</span> {{ stats.z }}</p>
-              <p class="text-gray-300"><span class="text-mafia-gold">Hayat (H):</span> {{ stats.h }}</p>
-            </div>
-            <div>
-              <p class="text-gray-300"><span class="text-mafia-gold">Kullanılabilir Puan:</span> {{ stats.freePoints }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="loading" class="text-center text-mafia-gold">
-          Yükleniyor...
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
   profile: PlayerProfileDto | null = null;
   stats: PlayerStatsDto | null = null;
+  xpProgression: XpProgressionData | null = null;
   loading = true;
 
-  constructor(private playerService: PlayerService) {}
+  constructor(
+    private playerService: PlayerService,
+    private xpProgressionService: XpProgressionService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadProfile();
     this.loadStats();
+    this.loadXpProgression();
   }
 
   private loadProfile(): void {
@@ -104,18 +53,47 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  private loadXpProgression(): void {
+    this.xpProgressionService.getXpProgression().subscribe({
+      next: (progression) => {
+        this.xpProgression = progression;
+      },
+      error: (error) => {
+        console.error('XP progression load error:', error);
+      }
+    });
+  }
+
   // XP hesaplama metodları
   getXpToNextLevel(currentLevel: number): number {
     if (currentLevel >= 50) return 0; // Max level
-    const baseXp = 100;
-    const curveK = 1.5;
-    const curvePow = 1.2;
-    return baseXp + Math.floor(baseXp * curveK * Math.pow(currentLevel, curvePow));
+    if (!this.xpProgression) return 0; // Fallback to hardcoded values
+    
+    const levelData = this.xpProgression.levelProgression.find(p => p.level === currentLevel);
+    return levelData ? levelData.xpToNext : 0;
   }
 
   getXpPercentage(currentXp: number, currentLevel: number): number {
     if (currentLevel >= 50) return 100; // Max level
+    if (!currentXp || currentXp < 0) return 0; // Handle undefined/null
     const xpToNext = this.getXpToNextLevel(currentLevel);
+    if (xpToNext <= 0) return 100; // Prevent division by zero
     return Math.min(100, (currentXp / xpToNext) * 100);
+  }
+
+  // Karakter resmi seçimi
+  getCharacterVariant(): number {
+    if (!this.profile || !this.profile.id) return 1;
+    // ID'ye göre karakter varyantı seç (1-4 arası)
+    return (Number(this.profile.id) % 4) + 1;
+  }
+
+  getCharacterImage(): string {
+    const variant = this.getCharacterVariant();
+    return `/assets/images/characters/character-${variant}.svg`;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

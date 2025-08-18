@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from '../../../shared/models/auth.models';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-mafia-primary">
       <div class="max-w-md w-full space-y-8 p-8 bg-mafia-secondary rounded-lg shadow-lg">
@@ -89,7 +89,7 @@ export class LoginComponent {
 
     try {
       await this.authService.login(this.credentials);
-      this.router.navigate(['/lobby']);
+      this.router.navigate(['/dashboard']);
     } catch (error) {
       this.error = 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       console.error('Login error:', error);

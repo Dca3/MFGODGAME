@@ -1,0 +1,240 @@
+<div class="dashboard-container">
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1 class="welcome-title">Hoş Geldin, {{ profile?.username || 'Oyuncu' }}!</h1>
+      <p class="welcome-subtitle">Mafia dünyasına adım attın. Gücünü göster ve efsane ol!</p>
+    </div>
+    <div class="welcome-character">
+      <img [src]="getCharacterImage()" [alt]="'Character'" class="character-img">
+    </div>
+    <div class="welcome-actions">
+      <button class="logout-btn" (click)="logout()">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+        </svg>
+        Çıkış Yap
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <!-- Level Card -->
+    <div class="stat-card level-card">
+      <div class="card-header">
+        <div class="card-icon level-icon">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Seviye</h3>
+      </div>
+      <div class="card-content">
+        <div class="level-display">
+          <span class="level-number">{{ profile?.level || 1 }}</span>
+          <div class="xp-bar">
+            <div class="xp-fill" [style.width.%]="getXpPercentage()"></div>
+          </div>
+          <span class="xp-text">{{ profile?.experience || 0 }} XP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Money Card -->
+    <div class="stat-card money-card">
+      <div class="card-header">
+        <div class="card-icon money-icon">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Para</h3>
+      </div>
+      <div class="card-content">
+        <div class="money-display">
+          <span class="money-amount">${{ profile?.money || 0 }}</span>
+          <span class="money-label">Toplam Varlık</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reputation Card -->
+    <div class="stat-card reputation-card">
+      <div class="card-header">
+        <div class="card-icon reputation-icon">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+        </div>
+        <h3 class="card-title">İtibar</h3>
+      </div>
+      <div class="card-content">
+        <div class="reputation-display">
+          <span class="reputation-score">{{ profile?.reputation || 0 }}</span>
+          <span class="reputation-label">Toplam Puan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Points Card -->
+    <div class="stat-card points-card">
+      <div class="card-header">
+        <div class="card-icon points-icon">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Kullanılabilir Puan</h3>
+      </div>
+      <div class="card-content">
+        <div class="points-display">
+          <span class="points-number">{{ stats?.FreePoints || 0 }}</span>
+          <span class="points-label">Dağıtılabilir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="actions-section">
+    <h2 class="section-title">Hızlı Erişim</h2>
+    <div class="actions-grid">
+      <a routerLink="/quests" class="action-card quest-card">
+        <div class="action-icon">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="action-title">Görevler</h3>
+        <p class="action-description">Yeni görevler al ve ödüller kazan</p>
+      </a>
+
+      <a routerLink="/inventory" class="action-card inventory-card">
+        <div class="action-icon">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
+          </svg>
+        </div>
+        <h3 class="action-title">Envanter</h3>
+        <p class="action-description">Ekipmanlarını yönet ve güçlendir</p>
+      </a>
+
+      <a routerLink="/duel" class="action-card duel-card">
+        <div class="action-icon">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+          </svg>
+        </div>
+        <h3 class="action-title">Düello</h3>
+        <p class="action-description">Diğer oyuncularla savaş</p>
+      </a>
+
+      <a routerLink="/profile" class="action-card profile-card">
+        <div class="action-icon">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+          </svg>
+        </div>
+        <h3 class="action-title">Profil</h3>
+        <p class="action-description">Karakterini özelleştir</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Character Stats -->
+  <div class="stats-section" *ngIf="stats">
+    <h2 class="section-title">Karakter İstatistikleri</h2>
+    <div class="character-stats">
+      <div class="stat-item">
+        <div class="stat-info">
+          <div class="stat-icon">🎭</div>
+          <div class="stat-details">
+            <div class="stat-label">Karizma</div>
+            <div class="stat-description">Sosyal etkileşim ve liderlik</div>
+          </div>
+        </div>
+        <div class="stat-display">
+          <div class="stat-bar">
+            <div class="stat-fill charisma-fill" [style.width.%]="(stats.Karizma / 20) * 100"></div>
+          </div>
+          <div class="stat-value">{{ stats.Karizma }}/20</div>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-info">
+          <div class="stat-icon">💪</div>
+          <div class="stat-details">
+            <div class="stat-label">Güç</div>
+            <div class="stat-description">Fiziksel saldırı ve dayanıklılık</div>
+          </div>
+        </div>
+        <div class="stat-display">
+          <div class="stat-bar">
+            <div class="stat-fill strength-fill" [style.width.%]="(stats.Guc / 20) * 100"></div>
+          </div>
+          <div class="stat-value">{{ stats.Guc }}/20</div>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-info">
+          <div class="stat-icon">🧠</div>
+          <div class="stat-details">
+            <div class="stat-label">Zeka</div>
+            <div class="stat-description">Strateji ve problem çözme</div>
+          </div>
+        </div>
+        <div class="stat-display">
+          <div class="stat-bar">
+            <div class="stat-fill intelligence-fill" [style.width.%]="(stats.Zeka / 20) * 100"></div>
+          </div>
+          <div class="stat-value">{{ stats.Zeka }}/20</div>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-info">
+          <div class="stat-icon">❤️</div>
+          <div class="stat-details">
+            <div class="stat-label">Hayat</div>
+            <div class="stat-description">Can puanı ve hayatta kalma</div>
+          </div>
+        </div>
+        <div class="stat-display">
+          <div class="stat-bar">
+            <div class="stat-fill vitality-fill" [style.width.%]="(stats.Hayat / 20) * 100"></div>
+          </div>
+          <div class="stat-value">{{ stats.Hayat }}/20</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stat Allocation Section -->
+    <div class="stat-allocation" *ngIf="stats.FreePoints > 0">
+      <div class="allocation-header">
+        <h3 class="allocation-title">Stat Puanı Dağıtımı</h3>
+        <div class="free-points">Kullanılabilir Puan: <span class="points-number">{{ stats.FreePoints }}</span></div>
+      </div>
+      <div class="allocation-controls">
+        <div class="stat-control" *ngFor="let stat of ['Karizma', 'Guc', 'Zeka', 'Hayat']; let i = index">
+          <div class="control-label">{{ getStatDisplayName(stat) }}</div>
+          <div class="control-buttons">
+            <button class="stat-btn minus-btn" (click)="decreaseStat(stat)" [disabled]="!canDecreaseStat(stat)">
+              <span>-</span>
+            </button>
+            <span class="current-value">{{ getCurrentStatValue(stat) }}</span>
+            <button class="stat-btn plus-btn" (click)="increaseStat(stat)" [disabled]="!canIncreaseStat(stat)">
+              <span>+</span>
+            </button>
+          </div>
+        </div>
+        <button class="apply-btn" (click)="applyStatChanges()" [disabled]="!hasStatChanges()">
+          Değişiklikleri Uygula
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, RefreshRequest } from '../../shared/models/auth.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -169,6 +170,3 @@ export class AuthService {
     this.tokenSubject.next(null);
   }
 }
-
-// Import environment
-import { environment } from '../../../environments/environment';

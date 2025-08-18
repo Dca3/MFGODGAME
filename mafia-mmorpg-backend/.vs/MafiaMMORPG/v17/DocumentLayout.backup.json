@@ -3,32 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D8C98EF5-330A-42DE-801C-1D8C4240AD24}|MafiaMMORPG.Domain\\MafiaMMORPG.Domain.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.domain\\entities\\playerquest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8C98EF5-330A-42DE-801C-1D8C4240AD24}|MafiaMMORPG.Domain\\MafiaMMORPG.Domain.csproj|solutionrelative:mafiammorpg.domain\\entities\\playerquest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\questendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\endpoints\\questendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\adminendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\endpoints\\adminendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\inventoryendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\endpoints\\inventoryendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{ADB96C2C-5B7F-4AEB-8A1B-54D56BBAF00C}|MafiaMMORPG.Infrastructure\\MafiaMMORPG.Infrastructure.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.infrastructure\\services\\questservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ADB96C2C-5B7F-4AEB-8A1B-54D56BBAF00C}|MafiaMMORPG.Infrastructure\\MafiaMMORPG.Infrastructure.csproj|solutionrelative:mafiammorpg.infrastructure\\services\\questservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\questendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\endpoints\\questendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\services\\seedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\services\\seedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D8C98EF5-330A-42DE-801C-1D8C4240AD24}|MafiaMMORPG.Domain\\MafiaMMORPG.Domain.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.domain\\entities\\playerquest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8C98EF5-330A-42DE-801C-1D8C4240AD24}|MafiaMMORPG.Domain\\MafiaMMORPG.Domain.csproj|solutionrelative:mafiammorpg.domain\\entities\\playerquest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\extensions\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\extensions\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\adminendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|solutionrelative:mafiammorpg.web\\endpoints\\adminendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{283A5380-B3AA-4996-80B5-CD59F434B21C}|MafiaMMORPG.Web\\MafiaMMORPG.Web.csproj|c:\\users\\dogan.arici\\desktop\\cssdiv2\\mafia-mmorpg-backend\\mafiammorpg.web\\endpoints\\authendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +54,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
+              "Title": "InventoryEndpoints.cs",
+              "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\InventoryEndpoints.cs",
+              "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Endpoints\\InventoryEndpoints.cs",
+              "ToolTip": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\InventoryEndpoints.cs",
+              "RelativeToolTip": "MafiaMMORPG.Web\\Endpoints\\InventoryEndpoints.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T08:19:11.082Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "PlayerQuest.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Domain\\Entities\\PlayerQuest.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Domain\\Entities\\PlayerQuest.cs",
@@ -58,12 +74,11 @@
               "RelativeToolTip": "MafiaMMORPG.Domain\\Entities\\PlayerQuest.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAYwBYAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T14:19:55.636Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T14:19:55.636Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "SeedService.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Services\\SeedService.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Services\\SeedService.cs",
@@ -71,64 +86,60 @@
               "RelativeToolTip": "MafiaMMORPG.Web\\Services\\SeedService.cs",
               "ViewState": "AgIAAI8AAAAAAAAAAAAEwKAAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T14:00:56.663Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T14:00:56.663Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "AdminEndpoints.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\AdminEndpoints.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Endpoints\\AdminEndpoints.cs",
               "ToolTip": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\AdminEndpoints.cs",
               "RelativeToolTip": "MafiaMMORPG.Web\\Endpoints\\AdminEndpoints.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAqwF0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAqwEYAAABYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T13:55:08.076Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T13:55:08.076Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "QuestService.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Infrastructure\\Services\\QuestService.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Infrastructure\\Services\\QuestService.cs",
               "ToolTip": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Infrastructure\\Services\\QuestService.cs",
               "RelativeToolTip": "MafiaMMORPG.Infrastructure\\Services\\QuestService.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAAABwAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAACsAAAAAAAAAAAASwD0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T13:48:58.617Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T13:48:58.617Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Program.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Program.cs",
               "ToolTip": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Program.cs",
               "RelativeToolTip": "MafiaMMORPG.Web\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T12:46:04.791Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T12:46:04.791Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "QuestEndpoints.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\QuestEndpoints.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Endpoints\\QuestEndpoints.cs",
               "ToolTip": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\QuestEndpoints.cs",
               "RelativeToolTip": "MafiaMMORPG.Web\\Endpoints\\QuestEndpoints.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-13T12:45:23.772Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "AuthEndpoints.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Endpoints\\AuthEndpoints.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Endpoints\\AuthEndpoints.cs",
@@ -136,12 +147,11 @@
               "RelativeToolTip": "MafiaMMORPG.Web\\Endpoints\\AuthEndpoints.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAG0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T09:58:06.048Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T09:58:06.048Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "ServiceCollectionExtensions.cs",
               "DocumentMoniker": "C:\\Users\\dogan.arici\\Desktop\\cssdiv2\\mafia-mmorpg-backend\\MafiaMMORPG.Web\\Extensions\\ServiceCollectionExtensions.cs",
               "RelativeDocumentMoniker": "MafiaMMORPG.Web\\Extensions\\ServiceCollectionExtensions.cs",
@@ -149,8 +159,7 @@
               "RelativeToolTip": "MafiaMMORPG.Web\\Extensions\\ServiceCollectionExtensions.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAArwCEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T07:38:49.491Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T07:38:49.491Z"
             }
           ]
         }

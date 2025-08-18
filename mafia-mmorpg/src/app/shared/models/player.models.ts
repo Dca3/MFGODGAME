@@ -1,22 +1,24 @@
 export interface PlayerProfileDto {
   id: string;
+  username: string;
   level: number;
+  experience: number;
   money: number;
   reputation: number;
   createdAt: string;
 }
 
 export interface PlayerStatsDto {
-  k: number;
-  g: number;
-  z: number;
-  h: number;
-  freePoints: number;
+  Karizma: number;
+  Guc: number;
+  Zeka: number;
+  Hayat: number;
+  FreePoints: number;
 }
 
 export interface AllocateStatsRequest {
-  k: number;
-  g: number;
-  z: number;
-  h: number;
+  Karizma: number;
+  Guc: number;
+  Zeka: number;
+  Hayat: number;
 }
